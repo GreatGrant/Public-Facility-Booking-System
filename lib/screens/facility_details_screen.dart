@@ -178,7 +178,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Handle booking logic
+                    Navigator.pushNamed(context, '/booking-confirmation');
                   },
                   icon: const Icon(Icons.book, color: Colors.white),
                   label: const Text('Book Now'),

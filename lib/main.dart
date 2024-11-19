@@ -1,3 +1,4 @@
+import 'package:facility_boking/screens/booking_confirmation.dart';
 import 'package:facility_boking/screens/calendar_screen.dart';
 import 'package:facility_boking/screens/facility_details_screen.dart';
 import 'package:facility_boking/screens/forgot_password_screen.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/home-screen': (context) => const HomeScreen(),
         '/calendar-screen': (context) => const CalendarScreen(),
         '/facility-details': (context) => const FacilityDetailsScreen(title: '', description: '', imageUrl: ''),
+        '/booking-confirmation': (context) => BookingConfirmationScreen(facilityId: '', facilityName: '', facilityImageUrl: '', availableDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)]),
       },
     );
   }
