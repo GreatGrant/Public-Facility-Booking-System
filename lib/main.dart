@@ -1,3 +1,7 @@
+import 'package:facility_boking/screens/calendar_screen.dart';
+import 'package:facility_boking/screens/forgot_password_screen.dart';
+import 'package:facility_boking/screens/home_screen.dart';
+import 'package:facility_boking/screens/login_screen.dart';
 import 'package:facility_boking/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,16 +12,19 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: SignupScreen()
+      title: 'Facility Booking',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginScreen(),
+        '/signup': (context) => SignupScreen(),
+        '/forgot-password': (context) => ForgotPasswordScreen(),
+        '/home-screen': (context) => const HomeScreen(),
+        '/calendar-screen': (context) => const CalendarScreen(),
+      },
     );
   }
 }

@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../reusable_widgets.dart';
 
-class SignupScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _mobileController = TextEditingController();
 
   // Define a consistent color scheme
   final Color primaryColor = const Color(0xFF0A72B1); // Deep blue
   final Color accentColor = const Color(0xFFD9EEF3); // Light blue
   final Color textColor = Colors.black;
+
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class SignupScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Create an Account",
+                    "Welcome Back",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -38,7 +37,7 @@ class SignupScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Sign up to access facilities and manage your bookings.",
+                    "Log in to manage your bookings and facilities.",
                     style: TextStyle(
                       fontSize: 16,
                       color: textColor.withOpacity(0.7),
@@ -46,21 +45,7 @@ class SignupScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
 
-                  // Reusable CustomTextField for each input
-                  CustomTextField(
-                    controller: _nameController,
-                    labelText: "Full Name",
-                    prefixIcon: Icons.person,
-                    primaryColor: primaryColor,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter your name.";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-
+                  // Reusable CustomTextField for email
                   CustomTextField(
                     controller: _emailController,
                     labelText: "Email",
@@ -80,24 +65,7 @@ class SignupScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  CustomTextField(
-                    controller: _mobileController,
-                    labelText: "Mobile Number",
-                    prefixIcon: Icons.phone,
-                    primaryColor: primaryColor,
-                    keyboardType: TextInputType.phone,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter your mobile number.";
-                      }
-                      if (!RegExp(r"^\d{10}$").hasMatch(value)) {
-                        return "Please enter a valid mobile number.";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-
+                  // Reusable CustomTextField for password
                   CustomTextField(
                     controller: _passwordController,
                     labelText: "Password",
@@ -106,7 +74,7 @@ class SignupScreen extends StatelessWidget {
                     obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please enter a password.";
+                        return "Please enter your password.";
                       }
                       if (value.length < 6) {
                         return "Password must be at least 6 characters long.";
@@ -114,56 +82,53 @@ class SignupScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
-
-                  CustomTextField(
-                    controller: _confirmPasswordController,
-                    labelText: "Confirm Password",
-                    prefixIcon: Icons.lock,
-                    primaryColor: primaryColor,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please confirm your password.";
-                      }
-                      if (value != _passwordController.text) {
-                        return "Passwords do not match.";
-                      }
-                      return null;
-                    },
-                  ),
                   const SizedBox(height: 30),
 
-                  // Reusable CustomButton for signup
+                  // Reusable CustomButton for login
                   CustomButton(
-                    buttonText: "Sign Up",
+                    buttonText: "Log In",
                     primaryColor: primaryColor,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Handle sign-up logic
+                        // Handle login logic
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Signing up...')),
+                          const SnackBar(content: Text('Logging in...')),
                         );
+                        Navigator.pushNamed(context, '/home-screen');
                       }
                     },
                   ),
 
                   const SizedBox(height: 20),
 
-                  // Login Redirect
+                  // Signup Redirect
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Already have an account?",
+                        "Don't have an account?",
                         style: TextStyle(color: textColor.withOpacity(0.7)),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/login');
+                          Navigator.pushNamed(context, '/signup'); // Adjust as needed
                         },
                         child: Text(
-                          "Log In",
+                          "Sign Up",
+                          style: TextStyle(color: primaryColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/forgot-password');
+                        },
+                        child: Text(
+                          "Forgot Password?",
                           style: TextStyle(color: primaryColor),
                         ),
                       ),
