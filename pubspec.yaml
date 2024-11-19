@@ -38,7 +38,10 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   cached_network_image: ^3.4.1
   table_calendar: ^3.1.2
-
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+  provider: ^6.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

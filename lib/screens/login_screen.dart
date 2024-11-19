@@ -94,7 +94,7 @@ class LoginScreen extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Logging in...')),
                         );
-                        Navigator.pushNamed(context, '/home-screen');
+                        Navigator.pushReplacementNamed(context, '/home-screen');
                       }
                     },
                   ),
