@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../reusable_widgets.dart';
+import 'facility_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   // Define consistent colors
@@ -123,6 +124,7 @@ class HomeScreen extends StatelessWidget {
                     return _buildFacilityCard(
                       'Facility ${index + 1}',
                       'https://via.placeholder.com/150',
+                      context
                     );
                   },
                 ),
@@ -253,61 +255,67 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFacilityCard(String title, String imageUrl, {double rating = 4.5}) {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      child: Container(
-        width: 150,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CachedNetworkImage(
-              imageUrl: imageUrl,
-              height: 100,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
+  Widget _buildFacilityCard(String title, String imageUrl, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate to Facility Details screen
+        Navigator.pushNamed(context, '/facility-details');
+      },
+      child: Card(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        child: Container(
+          width: 150,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CachedNetworkImage(
+                imageUrl: imageUrl,
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                children: [
-                  Icon(Icons.star, color: Colors.amber, size: 16),
-                  Icon(Icons.star, color: Colors.amber, size: 16),
-                  Icon(Icons.star, color: Colors.amber, size: 16),
-                  Icon(Icons.star, color: Colors.amber, size: 16),
-                  Icon(Icons.star_border, color: Colors.amber, size: 16),
-                  const SizedBox(width: 4),
-                  Text(
-                    rating.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                      fontSize: 12,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.amber, size: 16),
+                    Icon(Icons.star, color: Colors.amber, size: 16),
+                    Icon(Icons.star, color: Colors.amber, size: 16),
+                    Icon(Icons.star, color: Colors.amber, size: 16),
+                    Icon(Icons.star_border, color: Colors.amber, size: 16),
+                    const SizedBox(width: 4),
+                    Text(
+                      '4.5',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Details',
-                style: TextStyle(color: primaryColor),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Details',
+                  style: TextStyle(color: const Color(0xFF0A72B1)),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:facility_boking/screens/calendar_screen.dart';
+import 'package:facility_boking/screens/facility_details_screen.dart';
 import 'package:facility_boking/screens/forgot_password_screen.dart';
 import 'package:facility_boking/screens/home_screen.dart';
 import 'package:facility_boking/screens/login_screen.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/forgot-password': (context) => ForgotPasswordScreen(),
         '/home-screen': (context) => const HomeScreen(),
         '/calendar-screen': (context) => const CalendarScreen(),
+        '/facility-details': (context) => const FacilityDetailsScreen(title: '', description: '', imageUrl: ''),
       },
     );
   }
