@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../models/facility_model.dart';
+
 class BookingConfirmationScreen extends StatefulWidget {
-  final String facilityId;
-  final String facilityName;
-  final String facilityImageUrl;
-  final List<DateTime> availableDates; // Added available dates
+  final FacilityModel facilityModel; // Accept FacilityModel
 
   const BookingConfirmationScreen({
     super.key,
-    required this.facilityId,
-    required this.facilityName,
-    required this.facilityImageUrl,
-    required this.availableDates, // Received available dates
+    required this.facilityModel, // Receive FacilityModel
   });
 
   @override
@@ -27,12 +23,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Color primaryColor = const Color(0xFF0A72B1);
+    const Color primaryColor = Color(0xFF0A72B1);
 
     // Format the selected date
-    String formattedStartDate = startDate != null
-        ? DateFormat.yMMMd().format(startDate!)
-        : 'Select booking date';
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +42,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
           children: [
             // Facility Image
             CachedNetworkImage(
-              imageUrl: widget.facilityImageUrl,
+              imageUrl: widget.facilityModel.imageUrl,
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -63,7 +56,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
 
             // Facility Name
             Text(
-              widget.facilityName,
+              widget.facilityModel.name,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: primaryColor,
@@ -82,7 +75,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
 
             // List of available dates
             Column(
-              children: widget.availableDates.map((date) {
+              children: widget.facilityModel.availabilityDates.map((date) {
                 String formattedDate = DateFormat.yMMMd().format(date);
                 return GestureDetector(
                   onTap: () => _pickStartDate(date),
@@ -90,9 +83,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: startDate == date
-                            ? primaryColor
-                            : Colors.grey,
+                        color: startDate == date ? primaryColor : Colors.grey,
                       ),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -112,8 +103,8 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
             Center(
               child: ElevatedButton.icon(
                 onPressed: _confirmBooking,
-                icon: const Icon(Icons.check_circle),
-                label: const Text('Confirm Booking'),
+                icon: const Icon(Icons.check_circle, color: Colors.white),
+                label: const Text('Confirm Booking', style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
                   padding: const EdgeInsets.symmetric(
@@ -165,6 +156,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
 
   void _approveBooking() {
     // Logic to approve and finalize the booking
+    // Here, you can integrate with your backend or Firestore to save the booking
+    // For demonstration, we'll show a confirmation dialog
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -219,6 +213,7 @@ class CardDetailsBottomSheet extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min, // To wrap content
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -234,6 +229,7 @@ class CardDetailsBottomSheet extends StatelessWidget {
               labelText: 'Card Number',
               border: OutlineInputBorder(),
             ),
+            keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 16),
           TextField(
@@ -241,6 +237,7 @@ class CardDetailsBottomSheet extends StatelessWidget {
               labelText: 'Expiry Date (MM/YY)',
               border: OutlineInputBorder(),
             ),
+            keyboardType: TextInputType.datetime,
           ),
           const SizedBox(height: 16),
           TextField(
@@ -248,6 +245,8 @@ class CardDetailsBottomSheet extends StatelessWidget {
               labelText: 'CVC',
               border: OutlineInputBorder(),
             ),
+            keyboardType: TextInputType.number,
+            obscureText: true,
           ),
           const SizedBox(height: 16),
           ElevatedButton(

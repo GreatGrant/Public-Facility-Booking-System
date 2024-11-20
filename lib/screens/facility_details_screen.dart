@@ -1,19 +1,13 @@
+import 'package:facility_boking/models/facility_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class FacilityDetailsScreen extends StatefulWidget {
-  final String title;
-  final String description;
-  final String imageUrl;
-  final double rating;
+  final FacilityModel facilityModel;
 
   const FacilityDetailsScreen({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-    this.rating = 4.5,
+    super.key, required this.facilityModel,
   });
 
   @override
@@ -37,13 +31,13 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Color primaryColor = const Color(0xFF0A72B1);
-    final Color textColor = Colors.black;
+    const Color primaryColor = Color(0xFF0A72B1);
+    const Color textColor = Colors.black;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.title,
+          widget.facilityModel.name,
           style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
         ),
         backgroundColor: primaryColor,
@@ -56,7 +50,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
             children: [
               // Facility Image
               CachedNetworkImage(
-                imageUrl: widget.imageUrl,
+                imageUrl: widget.facilityModel.imageUrl,
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -70,7 +64,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
 
               // Facility Title
               Text(
-                widget.title,
+                widget.facilityModel.name,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: primaryColor,
@@ -81,16 +75,16 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
               // Facility Rating
               Row(
                 children: [
-                  Icon(Icons.star, color: Colors.amber, size: 20),
+                  const Icon(Icons.star, color: Colors.amber, size: 20),
                   const SizedBox(width: 4),
                   Text(
-                    widget.rating.toString(),
+                    widget.facilityModel.rating.toString(),
                     style: theme.textTheme.bodyMedium
                         ?.copyWith(color: textColor, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '(${(widget.rating * 20).toInt()} reviews)',
+                    '(${(widget.facilityModel.rating * 20).toInt()} reviews)',
                     style: theme.textTheme.bodySmall
                         ?.copyWith(color: textColor.withOpacity(0.6)),
                   ),
@@ -108,7 +102,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                widget.description,
+                widget.facilityModel.description,
                 style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
               ),
               const SizedBox(height: 16),
@@ -154,7 +148,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                     color: primaryColor.withOpacity(0.3),
                     shape: BoxShape.circle,
                   ),
-                  selectedDecoration: BoxDecoration(
+                  selectedDecoration: const BoxDecoration(
                     color: Colors.green,
                     shape: BoxShape.circle,
                   ),
@@ -181,7 +175,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                     Navigator.pushNamed(context, '/booking-confirmation');
                   },
                   icon: const Icon(Icons.book, color: Colors.white),
-                  label: const Text('Book Now'),
+                  label: const Text('Book Now', style: TextStyle(color: Colors.white),),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     textStyle: const TextStyle(color: Colors.white),

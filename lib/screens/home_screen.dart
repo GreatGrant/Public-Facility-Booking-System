@@ -1,9 +1,9 @@
+import 'package:facility_boking/models/facility_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../reusable_widgets.dart';
-import 'facility_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   // Define consistent colors
@@ -124,7 +124,8 @@ class HomeScreen extends StatelessWidget {
                     return _buildFacilityCard(
                       'Facility ${index + 1}',
                       'https://via.placeholder.com/150',
-                      context
+                      context,
+                      'facility_${index + 1}',
                     );
                   },
                 ),
@@ -231,40 +232,29 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(String title, IconData icon) {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 40, color: primaryColor),
-            const SizedBox(height: 10),
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: textColor,
-              ),
-            ),
-          ],
-        ),
-      ),
+  Widget _buildFacilityCard(
+      String title, String imageUrl, BuildContext context, String id) {
+    final facility = FacilityModel(
+      id: id,
+      name: title,
+      imageUrl: imageUrl,
+      rating: 4.5,
+      category: 'Conference Room',
+      description: '', isFeatured: true,
+      availabilityDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)], // Dynamic data
     );
-  }
 
-  Widget _buildFacilityCard(String title, String imageUrl, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to Facility Details screen
-        Navigator.pushNamed(context, '/facility-details');
+        Navigator.pushNamed(
+          context,
+          '/facility-details',
+          arguments: facility,
+        );
       },
       child: Card(
-        color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        child: Container(
+        child: SizedBox(
           width: 150,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +269,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -288,21 +278,12 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.star, color: Colors.amber, size: 16),
                     Icon(Icons.star, color: Colors.amber, size: 16),
                     Icon(Icons.star, color: Colors.amber, size: 16),
                     Icon(Icons.star, color: Colors.amber, size: 16),
                     Icon(Icons.star_border, color: Colors.amber, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      '4.5',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -311,7 +292,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Details',
-                  style: TextStyle(color: const Color(0xFF0A72B1)),
+                  style: TextStyle(color: primaryColor),
                 ),
               ),
             ],

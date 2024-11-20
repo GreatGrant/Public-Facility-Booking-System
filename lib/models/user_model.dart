@@ -1,10 +1,11 @@
 class UserModel {
-  final String id; // Firestore document ID
+  final String id;
   final String name;
   final String email;
   final String phoneNumber;
   final String profileImage;
   final List<String> recentBookings;
+  final String role;
 
   UserModel({
     required this.id,
@@ -13,6 +14,7 @@ class UserModel {
     required this.phoneNumber,
     required this.profileImage,
     required this.recentBookings,
+    required this.role, // Initialize role
   });
 
   factory UserModel.fromFirestore(Map<String, dynamic> data, String id) {
@@ -23,6 +25,7 @@ class UserModel {
       phoneNumber: data['phoneNumber'] ?? '',
       profileImage: data['profileImage'] ?? '',
       recentBookings: List<String>.from(data['recentBookings'] ?? []),
+      role: data['role'] ?? 'user',
     );
   }
 
@@ -33,6 +36,7 @@ class UserModel {
       'phoneNumber': phoneNumber,
       'profileImage': profileImage,
       'recentBookings': recentBookings,
+      'role': role,
     };
   }
 }

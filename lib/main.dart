@@ -1,3 +1,4 @@
+import 'package:facility_boking/providers/auth_provider.dart';
 import 'package:facility_boking/screens/booking_confirmation.dart';
 import 'package:facility_boking/screens/calendar_screen.dart';
 import 'package:facility_boking/screens/facility_details_screen.dart';
@@ -7,12 +8,18 @@ import 'package:facility_boking/screens/login_screen.dart';
 import 'package:facility_boking/screens/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'models/facility_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  runApp(const MyApp());
+  runApp( ChangeNotifierProvider(
+    create: (_) => AuthProvider(),
+    child: MyApp(),
+  ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -30,8 +37,8 @@ class MyApp extends StatelessWidget {
         '/forgot-password': (context) => ForgotPasswordScreen(),
         '/home-screen': (context) => const HomeScreen(),
         '/calendar-screen': (context) => const CalendarScreen(),
-        '/facility-details': (context) => const FacilityDetailsScreen(title: '', description: '', imageUrl: ''),
-        '/booking-confirmation': (context) => BookingConfirmationScreen(facilityId: '', facilityName: '', facilityImageUrl: '', availableDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)]),
+        '/facility-details': (context) => FacilityDetailsScreen(facilityModel: FacilityModel(id: '', name: 'blahh', imageUrl: '', category: '', description: '', rating: 34, isFeatured: true, availabilityDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)])),
+        '/booking-confirmation': (context) => BookingConfirmationScreen(facilityModel: FacilityModel(id: '', name: 'blahh', imageUrl: '', category: '', description: '', rating: 34, isFeatured: true, availabilityDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)])),
       },
     );
   }
