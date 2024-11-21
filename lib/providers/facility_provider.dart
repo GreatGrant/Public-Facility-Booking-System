@@ -4,6 +4,7 @@ import '../services/facility_service.dart';
 
 class FacilityProvider with ChangeNotifier {
   final FacilityService _facilityService = FacilityService();
+  List<FacilityModel> _featuredFacilities = []; // Store featured facilities
 
   List<FacilityModel> _facilities = [];
   bool _isLoading = false;
@@ -14,6 +15,7 @@ class FacilityProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   int get totalFacilities => _totalFacilities; // Getter for total facilities
+  List<FacilityModel> get featuredFacilities => _featuredFacilities; // Getter for featured facilities
 
   // Fetch all facilities
   Future<void> fetchFacilities() async {
@@ -39,6 +41,22 @@ class FacilityProvider with ChangeNotifier {
 
     try {
       _facilities = await _facilityService.fetchFacilitiesByCategory(category);
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Fetch featured facilities
+  Future<void> fetchFeaturedFacilities() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      _featuredFacilities = await _facilityService.fetchFeaturedFacilities();
     } catch (e) {
       _error = e.toString();
     } finally {
