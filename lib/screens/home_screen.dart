@@ -35,7 +35,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.person, color: accentColor),
             onPressed: () {
-              // Navigate to Profile
+              Navigator.pushNamed(context, '/profile-screen');
             },
           ),
         ],
@@ -241,7 +241,8 @@ class HomeScreen extends StatelessWidget {
       rating: 4.5,
       category: 'Conference Room',
       description: '', isFeatured: true,
-      availabilityDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)], // Dynamic data
+      availabilityDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)],
+      location: 'Lafia', // Dynamic data
     );
 
     return GestureDetector(

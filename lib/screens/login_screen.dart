@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart'; // Import Lottie package
+import 'package:facility_boking/providers/auth_provider.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../reusable_widgets.dart';
-import '../providers/auth_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -95,21 +95,11 @@ class LoginScreen extends StatelessWidget {
                             primaryColor: primaryColor,
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                // Trigger loading state
-                                authProvider.setLoading(true);
-
-                                // Call the signIn method
                                 await authProvider.signIn(
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  context,
                                 );
-
-                                // Stop loading
-                                authProvider.setLoading(false);
-
-                                if (authProvider.errorMessage == null) {
-                                  Navigator.pushReplacementNamed(context, '/home-screen');
-                                }
                               }
                             },
                           ),

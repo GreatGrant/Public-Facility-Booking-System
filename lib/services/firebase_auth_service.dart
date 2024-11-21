@@ -1,19 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
-class AuthService {
+class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Sign up a new user
-  Future<User?> signUp({
+
+  FirebaseAuthService() {
+    // Set persistence to local
+    _setPersistence();
+  }
+
+  // Set Firebase authentication persistence to LOCAL
+  Future<void> _setPersistence() async {
+    try {
+      await _auth.setPersistence(Persistence.LOCAL);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error setting persistence: $e');
+      }
+    }
+  }
+
+  // Listen to authentication state changes
+  Stream<User?> authStateChanges() => _auth.authStateChanges();
+
+  // Sign up a new user
+  Future<User?> signUpWithEmail({
     required String name,
     required String email,
     required String password,
     required String mobileNumber,
   }) async {
     try {
-      // Create a new user in Firebase Authentication
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -33,46 +53,44 @@ class AuthService {
       }
 
       return user;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message ?? 'An error occurred during sign-up.');
+    } catch (e) {
+      print('Sign up error: $e');
+      return null;
     }
   }
 
-  /// Sign in an existing user
-  Future<User?> signIn({
-    required String email,
-    required String password,
-  }) async {
+  // Sign in with email and password
+  Future<User?> signInWithEmail(String email, String password) async {
     try {
-      // Sign in the user with Firebase Authentication
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-
       return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message ?? 'An error occurred during sign-in.');
+    } catch (e) {
+      print('Sign in error: $e');
+      return null;
     }
   }
 
-  /// Forgot password - send a password reset email
-  Future<void> forgotPassword({required String email}) async {
-    try {
-      // Send password reset email
-      await _auth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message ?? 'An error occurred while sending the reset email.');
-    }
+  // Sign out
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 
-  /// Get current user
+  // Get the current user
   User? getCurrentUser() {
     return _auth.currentUser;
   }
 
-  /// Sign out user
-  Future<void> signOut() async {
-    await _auth.signOut();
+  // Reset password
+  Future<void> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Password reset error: $e');
+      }
+    }
   }
 }
