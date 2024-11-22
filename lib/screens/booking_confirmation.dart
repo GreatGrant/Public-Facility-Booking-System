@@ -131,9 +131,15 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
 
   void _confirmBooking() {
     if (startDate != null) {
-      Navigator.pushNamed(context, '/payment-screen', arguments: widget.facilityModel);
+      Navigator.pushNamed(
+        context,
+        '/payment-screen',
+        arguments: {
+          'facilityModel': widget.facilityModel,
+          'selectedDate': startDate,
+        },
+      );
     } else {
-      // Show error if no date is selected
       _showErrorDialog('Please select a date for booking.');
     }
   }

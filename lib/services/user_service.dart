@@ -19,4 +19,8 @@ class UserService {
       throw Exception('No user is logged in');
     }
   }
+
+  Future<void> updateUserData(Map<String, dynamic> userData) async {
+    await _firestore.collection('users').doc(userData['id']).update(userData);
+  }
 }

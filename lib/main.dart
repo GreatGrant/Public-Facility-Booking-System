@@ -1,6 +1,7 @@
 import 'package:facility_boking/providers/auth_provider.dart';
 import 'package:facility_boking/providers/facility_provider.dart';
 import 'package:facility_boking/providers/user_provider.dart';
+import 'package:facility_boking/screens/account_details.dart';
 import 'package:facility_boking/screens/add_facility_screen.dart';
 import 'package:facility_boking/screens/admin_dashboard.dart';
 import 'package:facility_boking/screens/booking_confirmation.dart';
@@ -29,7 +30,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()..fetchUserData()),
         ChangeNotifierProvider(create: (_) => FacilityProvider()),
       ],
       child: const MyApp(),
@@ -62,8 +63,9 @@ class MyApp extends StatelessWidget {
         '/profile-dashboard': (context) => const ProfileScreen(),
         '/manage-facilities': (context) => const ManageFacilitiesScreen(),
         '/add-facilities': (context) => const AddFacilityScreen(),
-        '/payment-screen': (context) => PaymentScreen(facilityModel: ModalRoute.of(context)!.settings.arguments as FacilityModel),
-        '/payment-success': (context) => const PaymentSuccessScreen()
+        '/payment-screen': (context) => const PaymentScreen(),
+        '/payment-success': (context) => const PaymentSuccessScreen(),
+        '/account-details': (context) => const AccountDetailsScreen()
       },
     );
   }

@@ -2,16 +2,14 @@ class BookingModel {
   final String id; // Firestore document ID
   final String userId;
   final String facilityId;
-  final DateTime startDate;
-  final DateTime endDate;
+  final DateTime bookedAt; // Single booking date
   final String status; // e.g., "Pending", "Approved", "Completed"
 
   BookingModel({
     required this.id,
     required this.userId,
     required this.facilityId,
-    required this.startDate,
-    required this.endDate,
+    required this.bookedAt,
     required this.status,
   });
 
@@ -20,8 +18,7 @@ class BookingModel {
       id: id,
       userId: data['userId'] ?? '',
       facilityId: data['facilityId'] ?? '',
-      startDate: DateTime.parse(data['startDate'] ?? DateTime.now().toIso8601String()),
-      endDate: DateTime.parse(data['endDate'] ?? DateTime.now().toIso8601String()),
+      bookedAt: DateTime.parse(data['bookedAt'] ?? DateTime.now().toIso8601String()),
       status: data['status'] ?? 'Pending',
     );
   }
@@ -30,8 +27,7 @@ class BookingModel {
     return {
       'userId': userId,
       'facilityId': facilityId,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
+      'bookedAt': bookedAt.toIso8601String(),
       'status': status,
     };
   }

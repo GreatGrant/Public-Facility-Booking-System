@@ -1,9 +1,33 @@
+import 'package:facility_boking/providers/facility_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/booking_model.dart';
 import '../models/facility_model.dart';
+import '../providers/user_provider.dart';
 
-class PaymentScreen extends StatelessWidget {
-  final FacilityModel facilityModel;
-  const PaymentScreen({super.key, required this.facilityModel});
+class PaymentScreen extends StatefulWidget {
+  const PaymentScreen({super.key});
+
+  @override
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+  late final FacilityModel facilityModel;
+  late DateTime selectedDate;
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<UserProvider>(context, listen: false).fetchUserData();
+    });
+
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    facilityModel = args['facilityModel'];
+    selectedDate = args['selectedDate'];
+  }
 
   // Simulate the payment process
   Future<Map<String, dynamic>> simulatePayment() async {
@@ -15,6 +39,19 @@ class PaymentScreen extends StatelessWidget {
     } else {
       return {'success': false, 'message': 'Payment failed. Please try again.'};
     }
+  }
+
+  void _removeBookedDate() {
+    final facilityProvider = Provider.of<FacilityProvider>(context, listen: false);
+
+    // Update the facility in the provider
+    facilityModel.availabilityDates.remove(selectedDate);
+    facilityProvider.updateFacility(facilityModel.id, facilityModel);
+
+    // Optionally show a success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Booking confirmed and date updated!')),
+    );
   }
 
   @override
@@ -34,10 +71,8 @@ class PaymentScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            double padding = 16.0;
             // Adjust padding and layout based on screen width
             if (constraints.maxWidth > 600) {
-              padding = 32.0; // Add more padding on larger screens
             }
 
             return SingleChildScrollView(
@@ -138,70 +173,84 @@ class PaymentScreen extends StatelessWidget {
                   Center(
                     child: ElevatedButton.icon(
                       onPressed: () async {
-                        // Show loading indicator while processing payment
                         showDialog(
                           context: context,
-                          barrierDismissible: false, // User cannot dismiss while loading
+                          barrierDismissible: false,
                           builder: (context) => const Center(child: CircularProgressIndicator()),
                         );
 
                         try {
-                          // Simulate the payment process
                           final paymentResult = await simulatePayment();
 
-                          // Close the loading indicator
-                          Navigator.pop(context);
+                          if (!context.mounted) return; // Ensure context is still available
+                          Navigator.pop(context); // Close the loading indicator
 
                           if (paymentResult['success']) {
-                            // Show success message and navigate to the confirmation screen
+                            final userId = context.read<UserProvider>().userData?['id'];
+                            if (userId == null) throw Exception('User data is missing');
+
+                            final newBooking = BookingModel(
+                              id: DateTime.now().toString(),
+                              userId: userId,
+                              facilityId: facilityModel.id,
+                              status: 'Pending',
+                              bookedAt: DateTime.now(),
+                            );
+
+                            await context.read<UserProvider>().addBooking(newBooking);
+                            _removeBookedDate();
+
+                            if (!context.mounted) return;
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: Text('Payment Successful'),
+                                title: const Text('Payment Successful'),
                                 content: Text(paymentResult['message']),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pop(context); // Close the dialog
+                                      Navigator.pop(context);
                                       Navigator.pushReplacementNamed(context, '/payment-success');
                                     },
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                   ),
                                 ],
                               ),
                             );
                           } else {
-                            // Show error message
+                            if (!context.mounted) return;
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: Text('Payment Failed'),
+                                title: const Text('Payment Failed'),
                                 content: Text(paymentResult['message']),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pop(context); // Close the dialog
+                                      Navigator.pop(context);
                                     },
-                                    child: Text('Try Again'),
+                                    child: const Text('Try Again'),
                                   ),
                                 ],
                               ),
                             );
                           }
-                        } catch (e) {
-                          // Handle any unexpected errors
+                        } catch (e, stackTrace) {
+                          debugPrint('Payment Error: $e');
+                          debugPrint('StackTrace: $stackTrace');
+
                           Navigator.pop(context); // Close the loading indicator
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: Text('Error'),
-                              content: Text('An unexpected error occurred. Please try again later.'),
+                              title: const Text('Error'),
+                              content: Text('An unexpected error occurred: $e'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context); // Close the dialog
+                                    Navigator.pop(context);
                                   },
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                 ),
                               ],
                             ),
