@@ -5,6 +5,18 @@ class PaymentScreen extends StatelessWidget {
   final FacilityModel facilityModel;
   const PaymentScreen({super.key, required this.facilityModel});
 
+  // Simulate the payment process
+  Future<Map<String, dynamic>> simulatePayment() async {
+    await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
+    // Simulate a 50% chance of success or failure
+    bool isSuccess = DateTime.now().second % 2 == 0;
+    if (isSuccess) {
+      return {'success': true, 'message': 'Payment successful'};
+    } else {
+      return {'success': false, 'message': 'Payment failed. Please try again.'};
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -57,7 +69,7 @@ class PaymentScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TextField(
+                  const TextField(
                     decoration: InputDecoration(
                       labelText: 'Card Number',
                       prefixIcon: Icon(Icons.credit_card, color: primaryColor),
@@ -66,7 +78,7 @@ class PaymentScreen extends StatelessWidget {
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16),
-                  Row(
+                  const Row(
                     children: [
                       Expanded(
                         child: TextField(
@@ -77,7 +89,7 @@ class PaymentScreen extends StatelessWidget {
                           keyboardType: TextInputType.datetime,
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
@@ -100,21 +112,21 @@ class PaymentScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TextField(
+                  const TextField(
                     decoration: InputDecoration(
                       labelText: 'Street Address',
                       border: OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  TextField(
+                  const TextField(
                     decoration: InputDecoration(
                       labelText: 'City',
                       border: OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  TextField(
+                  const TextField(
                     decoration: InputDecoration(
                       labelText: 'Postal Code',
                       border: OutlineInputBorder(),
@@ -125,17 +137,82 @@ class PaymentScreen extends StatelessWidget {
                   // Payment Button
                   Center(
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Add payment processing logic here
+                      onPressed: () async {
+                        // Show loading indicator while processing payment
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false, // User cannot dismiss while loading
+                          builder: (context) => const Center(child: CircularProgressIndicator()),
+                        );
+
+                        try {
+                          // Simulate the payment process
+                          final paymentResult = await simulatePayment();
+
+                          // Close the loading indicator
+                          Navigator.pop(context);
+
+                          if (paymentResult['success']) {
+                            // Show success message and navigate to the confirmation screen
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('Payment Successful'),
+                                content: Text(paymentResult['message']),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context); // Close the dialog
+                                      Navigator.pushReplacementNamed(context, '/payment-success');
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            // Show error message
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('Payment Failed'),
+                                content: Text(paymentResult['message']),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context); // Close the dialog
+                                    },
+                                    child: Text('Try Again'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          // Handle any unexpected errors
+                          Navigator.pop(context); // Close the loading indicator
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('Error'),
+                              content: Text('An unexpected error occurred. Please try again later.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context); // Close the dialog
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       },
                       icon: const Icon(Icons.payment, color: Colors.white),
                       label: const Text('Pay Now', style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       ),
                     ),
                   ),
@@ -159,3 +236,5 @@ class PaymentScreen extends StatelessWidget {
     );
   }
 }
+
+

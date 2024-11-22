@@ -131,7 +131,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
 
   void _confirmBooking() {
     if (startDate != null) {
-      Navigator.pushNamed(context, '/payment-screen', );
+      Navigator.pushNamed(context, '/payment-screen', arguments: widget.facilityModel);
       // Show bottom sheet to collect card details after selecting a date
       // showModalBottomSheet(
       //   context: context,
