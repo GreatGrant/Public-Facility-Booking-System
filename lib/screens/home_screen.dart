@@ -1,17 +1,34 @@
 import 'package:facility_boking/models/facility_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../providers/facility_provider.dart';
 import '../reusable_widgets.dart';
 
-class HomeScreen extends StatelessWidget {
-  // Define consistent colors
-  final Color primaryColor = const Color(0xFF0A72B1); // Deep blue
-  final Color accentColor = const Color(0xFFD9EEF3); // Light blue
-  final Color textColor = Colors.black;
+class HomeScreen extends StatefulWidget {
 
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  // Define consistent colors
+  final Color primaryColor = const Color(0xFF0A72B1);
+ // Deep blue
+  final Color accentColor = const Color(0xFFD9EEF3);
+ // Light blue
+  final Color textColor = Colors.black;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch featured facilities when the screen loads
+    Provider.of<FacilityProvider>(context, listen: false).fetchFeaturedFacilities();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,20 +132,20 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return _buildFacilityCard(
-                      'Facility ${index + 1}',
-                      'https://via.placeholder.com/150',
-                      context,
-                      'facility_${index + 1}',
-                    );
-                  },
-                ),
+              Consumer<FacilityProvider>(
+                builder: (context, provider, child) {
+                  return SizedBox(
+                    height: 200,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: provider.featuredFacilities.length,
+                      itemBuilder: (context, index) {
+                        final facility = provider.featuredFacilities[index];
+                        return _buildFacilityCard(facility, context);
+                      },
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 20),
 
@@ -233,16 +250,17 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildFacilityCard(
-      String title, String imageUrl, BuildContext context, String id) {
+      FacilityModel model, BuildContext context) {
     final facility = FacilityModel(
-      id: id,
-      name: title,
-      imageUrl: imageUrl,
-      rating: 4.5,
-      category: 'Conference Room',
-      description: '', isFeatured: true,
-      availabilityDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)],
-      location: 'Lafia', // Dynamic data
+      id: model.id,
+      name: model.name,
+      imageUrl: model.imageUrl,
+      rating: model.rating,
+      category: model.category,
+      description: model.description,
+      isFeatured: true,
+      availabilityDates: model.availabilityDates,
+      location: model.location, // Dynamic data
     );
 
     return GestureDetector(
@@ -261,7 +279,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CachedNetworkImage(
-                imageUrl: imageUrl,
+                imageUrl: model.imageUrl,
                 height: 100,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -269,7 +287,7 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  title,
+                  model.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,

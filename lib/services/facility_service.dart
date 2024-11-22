@@ -1,20 +1,23 @@
+import 'package:logger/logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../models/facility_model.dart';
 
 class FacilityService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   final String collectionPath = 'facilities';
+  final Logger logger = Logger();
 
   /// Fetch all facilities
   Future<List<FacilityModel>> fetchAllFacilities() async {
     try {
+      logger.i('Fetching all facilities...');
       final snapshot = await _firestore.collection(collectionPath).get();
+      logger.i('Fetched ${snapshot.size} facilities.');
       return snapshot.docs
           .map((doc) => FacilityModel.fromFirestore(doc.data(), doc.id))
           .toList();
     } catch (e) {
+      logger.e('Error fetching all facilities: $e', error: e);
       throw Exception('Failed to fetch all facilities: $e');
     }
   }
@@ -22,14 +25,17 @@ class FacilityService {
   /// Fetch facilities by category
   Future<List<FacilityModel>> fetchFacilitiesByCategory(String category) async {
     try {
+      logger.i('Fetching facilities for category: $category...');
       final snapshot = await _firestore
           .collection(collectionPath)
           .where('category', isEqualTo: category)
           .get();
+      logger.i('Fetched ${snapshot.size} facilities for category: $category.');
       return snapshot.docs
           .map((doc) => FacilityModel.fromFirestore(doc.data(), doc.id))
           .toList();
     } catch (e) {
+      logger.e('Error fetching facilities by category: $e', error: e);
       throw Exception('Failed to fetch facilities by category: $e');
     }
   }
@@ -37,14 +43,17 @@ class FacilityService {
   /// Fetch featured facilities
   Future<List<FacilityModel>> fetchFeaturedFacilities() async {
     try {
+      logger.i('Fetching featured facilities...');
       final snapshot = await _firestore
           .collection(collectionPath)
           .where('isFeatured', isEqualTo: true)
           .get();
+      logger.i('Fetched ${snapshot.size} featured facilities.');
       return snapshot.docs
           .map((doc) => FacilityModel.fromFirestore(doc.data(), doc.id))
           .toList();
     } catch (e) {
+      logger.e('Error fetching featured facilities: $e', error: e);
       throw Exception('Failed to fetch featured facilities: $e');
     }
   }
@@ -52,40 +61,48 @@ class FacilityService {
   /// Fetch the total count of facilities
   Future<int> fetchTotalFacilities() async {
     try {
+      logger.i('Fetching total facilities count...');
       final snapshot = await _firestore.collection(collectionPath).get();
-      return snapshot.size; // Firestore's size property gives the document count
+      logger.i('Total facilities count: ${snapshot.size}');
+      return snapshot.size;
     } catch (e) {
+      logger.e('Error fetching total facilities count: $e', error: e);
       throw Exception('Failed to fetch total facilities: $e');
     }
   }
-  // Create a new facility
+
+  /// Create a new facility
   Future<void> createFacility(FacilityModel facility) async {
     try {
-      await _firestore
-          .collection(collectionPath)
-          .add(facility.toFirestore());
+      logger.i('Creating a new facility: ${facility.name}...');
+      await _firestore.collection(collectionPath).add(facility.toFirestore());
+      logger.i('Facility created successfully.');
     } catch (e) {
+      logger.e('Error creating facility: $e', error: e);
       throw Exception('Failed to create facility: $e');
     }
   }
 
-  // Update a facility
+  /// Update a facility
   Future<void> updateFacility(String id, FacilityModel facility) async {
     try {
-      await _firestore
-          .collection(collectionPath)
-          .doc(id)
-          .update(facility.toFirestore());
+      logger.i('Updating facility with ID: $id...');
+      await _firestore.collection(collectionPath).doc(id).update(facility.toFirestore());
+      logger.i('Facility updated successfully.');
     } catch (e) {
+      logger.e('Error updating facility: $e', error: e);
       throw Exception('Failed to update facility: $e');
     }
   }
 
-  // Delete a facility
+  /// Delete a facility
   Future<void> deleteFacility(String id) async {
     try {
+      logger.i('Deleting facility with ID: $id...');
       await _firestore.collection(collectionPath).doc(id).delete();
+      logger.i('Facility deleted successfully.');
     } catch (e) {
+      logger.e('Error deleting facility: $e', error: e);
       throw Exception('Failed to delete facility: $e');
     }
   }

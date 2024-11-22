@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';  // Import logger
 import '../models/facility_model.dart';
 import '../services/facility_service.dart';
 
 class FacilityProvider with ChangeNotifier {
   final FacilityService _facilityService = FacilityService();
-  List<FacilityModel> _featuredFacilities = []; // Store featured facilities
+  final Logger logger = Logger(); // Create an instance of Logger
 
+  List<FacilityModel> _featuredFacilities = [];
   List<FacilityModel> _facilities = [];
   bool _isLoading = false;
   String? _error;
-  int _totalFacilities = 0; // New property for storing total facilities
+  int _totalFacilities = 0;
 
   List<FacilityModel> get facilities => _facilities;
   bool get isLoading => _isLoading;
   String? get error => _error;
-  int get totalFacilities => _totalFacilities; // Getter for total facilities
-  List<FacilityModel> get featuredFacilities => _featuredFacilities; // Getter for featured facilities
+  int get totalFacilities => _totalFacilities;
+  List<FacilityModel> get featuredFacilities => _featuredFacilities;
 
   // Fetch all facilities
   Future<void> fetchFacilities() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
+    logger.i('Fetching all facilities...');
 
     try {
       _facilities = await _facilityService.fetchAllFacilities();
+      logger.i('Fetched ${_facilities.length} facilities.');
     } catch (e) {
-      _error = e.toString();
+      _error = 'Failed to fetch facilities. Please try again.';
+      logger.e('Error fetching all facilities: $e', error: e);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -38,11 +43,14 @@ class FacilityProvider with ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
+    logger.i('Fetching facilities for category: $category...');
 
     try {
       _facilities = await _facilityService.fetchFacilitiesByCategory(category);
+      logger.i('Fetched ${_facilities.length} facilities for category: $category.');
     } catch (e) {
-      _error = e.toString();
+      _error = 'Failed to fetch facilities for category: $category. Please try again.';
+      logger.e('Error fetching facilities for category: $category: $e', error: e);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -54,11 +62,14 @@ class FacilityProvider with ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
+    logger.i('Fetching featured facilities...');
 
     try {
       _featuredFacilities = await _facilityService.fetchFeaturedFacilities();
+      logger.i('Fetched ${_featuredFacilities.length} featured facilities.');
     } catch (e) {
-      _error = e.toString();
+      _error = 'Failed to fetch featured facilities. Please try again.';
+      logger.e('Error fetching featured facilities: $e', error: e);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -70,11 +81,14 @@ class FacilityProvider with ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
+    logger.i('Fetching total facilities count...');
 
     try {
       _totalFacilities = await _facilityService.fetchTotalFacilities();
+      logger.i('Total facilities count: $_totalFacilities');
     } catch (e) {
-      _error = e.toString();
+      _error = 'Failed to fetch total facilities count. Please try again.';
+      logger.e('Error fetching total facilities count: $e', error: e);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -83,37 +97,47 @@ class FacilityProvider with ChangeNotifier {
 
   // Add a new facility
   Future<void> addFacility(FacilityModel facility) async {
+    logger.i('Adding new facility: ${facility.name}...');
     try {
       await _facilityService.createFacility(facility);
       _facilities.add(facility);
+      logger.i('Facility added: ${facility.name}');
       notifyListeners();
     } catch (e) {
-      _error = e.toString();
+      _error = 'Failed to add facility. Please try again.';
+      logger.e('Error adding facility: $e', error: e);
     }
   }
 
   // Update a facility
   Future<void> updateFacility(String id, FacilityModel updatedFacility) async {
+    logger.i('Updating facility with ID: $id...');
+
     try {
       await _facilityService.updateFacility(id, updatedFacility);
       final index = _facilities.indexWhere((facility) => facility.id == id);
       if (index != -1) {
         _facilities[index] = updatedFacility;
+        logger.i('Facility updated with ID: $id');
         notifyListeners();
       }
     } catch (e) {
-      _error = e.toString();
+      _error = 'Failed to update facility. Please try again.';
+      logger.e('Error updating facility with ID: $id: $e', error: e);
     }
   }
 
   // Delete a facility
   Future<void> deleteFacility(String id) async {
+    logger.i('Deleting facility with ID: $id...');
     try {
       await _facilityService.deleteFacility(id);
       _facilities.removeWhere((facility) => facility.id == id);
+      logger.i('Facility deleted with ID: $id');
       notifyListeners();
     } catch (e) {
-      _error = e.toString();
+      _error = 'Failed to delete facility. Please try again.';
+      logger.e('Error deleting facility with ID: $id: $e', error: e);
     }
   }
 }
