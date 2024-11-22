@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
-import '../models/user_model.dart';
+
 import '../services/user_service.dart';
 
 class UserProvider with ChangeNotifier {
+  Map<String, dynamic>? _userData;
   final UserService _userService = UserService();
 
-  UserModel? _currentUser;
+  Map<String, dynamic>? get userData => _userData;
 
-  UserModel? get currentUser => _currentUser;
-
-  Future<void> fetchUser(String id) async {
-    final user = await _userService.getUser(id);
-    if (user != null) {
-      _currentUser = user;
-      notifyListeners();
+  // Fetch user data
+  Future<void> fetchUserData() async {
+    try {
+      _userData = await _userService.getUserData();
+      notifyListeners(); // Notify listeners when data is fetched
+    } catch (e) {
+      print('Error fetching user data: $e');
     }
-  }
-
-  Future<void> updateUser(UserModel user) async {
-    await _userService.updateUser(user);
-    _currentUser = user;
-    notifyListeners();
   }
 }
