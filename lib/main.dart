@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
         '/manage-facilities': (context) => const ManageFacilitiesScreen(),
         '/add-facilities': (context) => const AddFacilityScreen(),
         '/payment-screen': (context) => PaymentScreen(facilityModel: ModalRoute.of(context)!.settings.arguments as FacilityModel),
-        '/payment-success': (context) => PaymentSuccessScreen();
+        '/payment-success': (context) => const PaymentSuccessScreen()
       },
     );
   }
