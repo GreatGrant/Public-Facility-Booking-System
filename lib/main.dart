@@ -10,6 +10,7 @@ import 'package:facility_boking/screens/forgot_password_screen.dart';
 import 'package:facility_boking/screens/home_screen.dart';
 import 'package:facility_boking/screens/login_screen.dart';
 import 'package:facility_boking/screens/manage_facilities.dart';
+import 'package:facility_boking/screens/payment_screen.dart';
 import 'package:facility_boking/screens/profile_screen.dart';
 import 'package:facility_boking/screens/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         '/profile-dashboard': (context) => const ProfileScreen(),
         '/manage-facilities': (context) => const ManageFacilitiesScreen(),
         '/add-facilities': (context) => const AddFacilityScreen(),
+        '/payment-screen': (context) => PaymentScreen(facilityModel: ModalRoute.of(context)!.settings.arguments as FacilityModel),
       },
     );
   }

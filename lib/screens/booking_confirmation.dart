@@ -25,8 +25,6 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
     final theme = Theme.of(context);
     const Color primaryColor = Color(0xFF0A72B1);
 
-    // Format the selected date
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -74,24 +72,18 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
             const SizedBox(height: 8),
 
             // List of available dates
-            Column(
+            Wrap(
+              spacing: 8.0, // Horizontal space between chips
+              runSpacing: 8.0, // Vertical space between lines
               children: widget.facilityModel.availabilityDates.map((date) {
                 String formattedDate = DateFormat.yMMMd().format(date);
                 return GestureDetector(
                   onTap: () => _pickStartDate(date),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: startDate == date ? primaryColor : Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      formattedDate,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: startDate == date ? primaryColor : null,
-                      ),
+                  child: Chip(
+                    label: Text(formattedDate),
+                    backgroundColor: startDate == date ? primaryColor : Colors.grey[300],
+                    labelStyle: theme.textTheme.bodyMedium?.copyWith(
+                      color: startDate == date ? Colors.white : Colors.black,
                     ),
                   ),
                 );
@@ -139,15 +131,16 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
 
   void _confirmBooking() {
     if (startDate != null) {
+      Navigator.pushNamed(context, '/payment-screen', );
       // Show bottom sheet to collect card details after selecting a date
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return CardDetailsBottomSheet(
-            onConfirm: _approveBooking,
-          );
-        },
-      );
+      // showModalBottomSheet(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return CardDetailsBottomSheet(
+      //       onConfirm: _approveBooking,
+      //     );
+      //   },
+      // );
     } else {
       // Show error if no date is selected
       _showErrorDialog('Please select a date for booking.');
@@ -200,64 +193,64 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
   }
 }
 
-class CardDetailsBottomSheet extends StatelessWidget {
-  final VoidCallback onConfirm;
-
-  const CardDetailsBottomSheet({super.key, required this.onConfirm});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final Color primaryColor = const Color(0xFF0A72B1);
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // To wrap content
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Enter Card Details',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: primaryColor,
-            ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Card Number',
-              border: OutlineInputBorder(),
-            ),
-            keyboardType: TextInputType.number,
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Expiry Date (MM/YY)',
-              border: OutlineInputBorder(),
-            ),
-            keyboardType: TextInputType.datetime,
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'CVC',
-              border: OutlineInputBorder(),
-            ),
-            keyboardType: TextInputType.number,
-            obscureText: true,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: onConfirm,
-            child: const Text('Confirm Payment'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class CardDetailsBottomSheet extends StatelessWidget {
+//   final VoidCallback onConfirm;
+//
+//   const CardDetailsBottomSheet({super.key, required this.onConfirm});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final Color primaryColor = const Color(0xFF0A72B1);
+//
+//     return Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: Column(
+//         mainAxisSize: MainAxisSize.min, // To wrap content
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(
+//             'Enter Card Details',
+//             style: theme.textTheme.headlineSmall?.copyWith(
+//               fontWeight: FontWeight.bold,
+//               color: primaryColor,
+//             ),
+//           ),
+//           const SizedBox(height: 16),
+//           TextField(
+//             decoration: InputDecoration(
+//               labelText: 'Card Number',
+//               border: OutlineInputBorder(),
+//             ),
+//             keyboardType: TextInputType.number,
+//           ),
+//           const SizedBox(height: 16),
+//           TextField(
+//             decoration: InputDecoration(
+//               labelText: 'Expiry Date (MM/YY)',
+//               border: OutlineInputBorder(),
+//             ),
+//             keyboardType: TextInputType.datetime,
+//           ),
+//           const SizedBox(height: 16),
+//           TextField(
+//             decoration: InputDecoration(
+//               labelText: 'CVC',
+//               border: OutlineInputBorder(),
+//             ),
+//             keyboardType: TextInputType.number,
+//             obscureText: true,
+//           ),
+//           const SizedBox(height: 16),
+//           ElevatedButton(
+//             onPressed: onConfirm,
+//             child: const Text('Confirm Payment'),
+//             style: ElevatedButton.styleFrom(
+//               backgroundColor: primaryColor,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

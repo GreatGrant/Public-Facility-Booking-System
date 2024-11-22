@@ -8,6 +8,7 @@ class FacilityModel {
   final bool isFeatured;
   final List<DateTime> availabilityDates; // Field for availability
   final String location; // Location as a string (address)
+  final double price; // Added price field
 
   FacilityModel({
     required this.id,
@@ -19,6 +20,7 @@ class FacilityModel {
     required this.isFeatured,
     required this.availabilityDates,
     required this.location, // String address for location
+    required this.price, // Added price to the constructor
   });
 
   factory FacilityModel.fromFirestore(Map<String, dynamic> data, String id) {
@@ -35,6 +37,7 @@ class FacilityModel {
           .toList() ??
           [],
       location: data['location'] ?? '', // Directly using location as a string
+      price: (data['price'] ?? 0.0).toDouble(), // Parse price from Firestore
     );
   }
 
@@ -48,6 +51,7 @@ class FacilityModel {
       'isFeatured': isFeatured,
       'availabilityDates': availabilityDates.map((date) => date.toIso8601String()).toList(),
       'location': location, // Storing location directly as a string
+      'price': price, // Store price in Firestore
     };
   }
 }

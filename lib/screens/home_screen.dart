@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.person, color: accentColor),
             onPressed: () {
-              Navigator.pushNamed(context, '/profile-screen');
+              Navigator.pushNamed(context, '/profile-dashboard');
             },
           ),
         ],
@@ -260,7 +260,8 @@ class _HomeScreenState extends State<HomeScreen> {
       description: model.description,
       isFeatured: true,
       availabilityDates: model.availabilityDates,
-      location: model.location, // Dynamic data
+      location: model.location,
+      price: model.price, // Dynamic data
     );
 
     return GestureDetector(

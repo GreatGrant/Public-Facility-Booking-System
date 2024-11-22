@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../helpers/date_formatter.dart';
+
 class FacilityDetailsScreen extends StatefulWidget {
   final FacilityModel facilityModel;
 
@@ -136,9 +138,11 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                     availableDates.any((date) => isSameDay(date, day)),
                 onDaySelected: (selectedDay, focusedDay) {
                   final isAvailable = availableDates.any((date) => isSameDay(date, selectedDay));
+                  final DateTime selectedDateInWAT = convertToWAT(selectedDay);
+
                   final message = isAvailable
-                      ? "This facility is available on ${selectedDay.toLocal()}."
-                      : "This facility is not available on ${selectedDay.toLocal()}.";
+                      ? "This facility is available on ${formatter.format(selectedDateInWAT)} WAT."
+                      : "This facility is not available on ${formatter.format(selectedDateInWAT)} WAT.";
 
                   showDialog(
                     context: context,

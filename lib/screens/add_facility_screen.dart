@@ -296,6 +296,7 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
           availabilityDates: availabilityDates,
           rating: 4.5,
           isFeatured: false,
+          price: 100000,
         );
 
         // Add the facility
