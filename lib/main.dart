@@ -50,8 +50,12 @@ class MyApp extends StatelessWidget {
         '/forgot-password': (context) => ForgotPasswordScreen(),
         '/home-screen': (context) => const HomeScreen(),
         '/calendar-screen': (context) => const CalendarScreen(),
-        '/facility-details': (context) => FacilityDetailsScreen(facilityModel: FacilityModel(id: '', name: 'blahh', imageUrl: '', category: '', description: '', rating: 34, isFeatured: true, availabilityDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)], location: '')),
-        '/booking-confirmation': (context) => BookingConfirmationScreen(facilityModel: FacilityModel(id: '', name: 'blahh', imageUrl: '', category: '', description: '', rating: 34, isFeatured: true, availabilityDates: [DateTime(2024, 11, 19),  DateTime(2024, 11, 21)], location: '')),
+        '/facility-details': (context) => FacilityDetailsScreen(
+          facilityModel: ModalRoute.of(context)!.settings.arguments as FacilityModel,
+        ),
+        '/booking-confirmation': (context) => BookingConfirmationScreen(
+          facilityModel: ModalRoute.of(context)!.settings.arguments as FacilityModel,
+        ),
         '/admin-dashboard': (context) => const AdminDashboard(),
         '/profile-dashboard': (context) => const ProfileScreen(),
         '/manage-facilities': (context) => const ManageFacilitiesScreen(),
@@ -60,3 +64,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

@@ -20,12 +20,8 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    // Example of available dates
-    availableDates = [
-      DateTime.now(),
-      DateTime.now().add(Duration(days: 2)),
-      DateTime.now().add(Duration(days: 4)),
-    ];
+    // Assuming facilityModel contains a List<DateTime> for available dates
+    availableDates = widget.facilityModel.availabilityDates;
   }
 
   @override
@@ -107,6 +103,21 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
               ),
               const SizedBox(height: 16),
 
+              // Facility Location
+              Text(
+                'Location',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.facilityModel.location, // Display the location
+                style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+              ),
+              const SizedBox(height: 16),
+
               // Availability Calendar
               Text(
                 'Availability',
@@ -172,7 +183,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/booking-confirmation');
+                    Navigator.pushNamed(context, '/booking-confirmation', arguments: widget.facilityModel);
                   },
                   icon: const Icon(Icons.book, color: Colors.white),
                   label: const Text('Book Now', style: TextStyle(color: Colors.white),),
