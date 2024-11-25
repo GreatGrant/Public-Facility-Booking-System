@@ -10,6 +10,7 @@ import 'package:facility_boking/screens/booking_confirmation.dart';
 import 'package:facility_boking/screens/booking_details.dart';
 import 'package:facility_boking/screens/bookings_history.dart';
 import 'package:facility_boking/screens/calendar_screen.dart';
+import 'package:facility_boking/screens/facilities_screen.dart';
 import 'package:facility_boking/screens/facility_details_screen.dart';
 import 'package:facility_boking/screens/forgot_password_screen.dart';
 import 'package:facility_boking/screens/home_screen.dart';
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
         '/booking-details': (context) => BookingDetailsScreen(booking: ModalRoute.of(context)!.settings.arguments as BookingModel),
         '/modify-booking' : (context) => ModifyBookingScreen(booking: ModalRoute.of(context)!.settings.arguments as BookingModel),
         '/booking-history' : (context) => const BookingHistoryScreen(),
+        '/facilities-screen' : (context) => const FacilitiesScreen(),
       },
     );
   }

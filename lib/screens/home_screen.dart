@@ -9,6 +9,7 @@ import '../models/booking_model.dart';
 import '../providers/facility_provider.dart';
 import '../providers/user_provider.dart';
 import '../reusable_widgets.dart';
+import '../widgets.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -21,9 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // Define consistent colors
   final Color primaryColor = const Color(0xFF0A72B1);
- // Deep blue
   final Color accentColor = const Color(0xFFD9EEF3);
- // Light blue
   final Color textColor = Colors.black;
 
   @override
@@ -41,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // Stream user bookings
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final userBookingsStream = userProvider.streamUserBookings(userId);
-
 
     return Scaffold(
       backgroundColor: accentColor,
@@ -150,7 +148,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: provider.featuredFacilities.length,
                       itemBuilder: (context, index) {
                         final facility = provider.featuredFacilities[index];
-                        return _buildFacilityCard(facility, context);
+                        return FacilityCard(
+                          facility: facility,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/facility-details',
+                              arguments: facility,
+                            );
+                          },
+                        );
                       },
                     ),
                   );
@@ -158,7 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 20),
               // Booking History CTA
-              // Recent Bookings Section
               // Recent Bookings Section
               StreamBuilder<List<BookingModel>>(
                 stream: userBookingsStream,
@@ -185,13 +191,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
 
-                  // Limit to the first two bookings
                   final bookings = snapshot.data!.take(2).toList(); // Take the first 2 bookings
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Title and "View All" button
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
@@ -207,7 +211,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             TextButton(
                               onPressed: () {
-                                // Navigate to Booking History
                                 Navigator.pushNamed(context, '/booking-history');
                               },
                               child: Text(
@@ -231,21 +234,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             leading: Icon(Icons.history, color: primaryColor),
                             title: Text(
                               booking.facilityName,
-                              style: TextStyle(color: textColor),
+                              style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
                             ),
                             subtitle: Text(
-                              'Last Booked: ${booking.bookedAt.toLocal().toString().substring(0, 10)}', // Formatting the date
-                              style: TextStyle(color: textColor.withOpacity(0.7)),
+                              'Date: ${booking.date}',
+                              style: theme.textTheme.bodySmall?.copyWith(color: textColor),
                             ),
-                            trailing: Icon(Icons.arrow_forward, color: primaryColor),
-                            onTap: () {
-                              // Navigate to booking details page
-                              Navigator.pushNamed(
-                                context,
-                                '/booking-details',
-                                arguments: booking,
-                              );
-                            },
                           );
                         },
                       ),
@@ -253,104 +247,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 20),
-
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Navigate to Booking Page
-        },
-        label: Text('Book Now', style: TextStyle(color: accentColor)),
-        icon: Icon(Icons.add, color: accentColor),
-        backgroundColor: primaryColor,
-      ),
-    );
-  }
-
-  Widget _buildFacilityCard(FacilityModel model, BuildContext context) {
-    final facility = FacilityModel(
-      id: model.id,
-      name: model.name,
-      imageUrl: model.imageUrl,
-      rating: model.rating,
-      category: model.category,
-      description: model.description,
-      isFeatured: true,
-      availabilityDates: model.availabilityDates,
-      location: model.location,
-      price: model.price, // Dynamic data
-    );
-
-    // Determine the number of full stars, half stars, and empty stars based on rating
-    int fullStars = model.rating.floor();
-    int halfStars = (model.rating - fullStars >= 0.5) ? 1 : 0;
-    int emptyStars = 5 - fullStars - halfStars;
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          '/facility-details',
-          arguments: facility,
-        );
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        child: SizedBox(
-          width: 150,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CachedNetworkImage(
-                imageUrl: model.imageUrl,
-                height: 100,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  model.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  overflow: TextOverflow.ellipsis,  // Truncate the name if it's too long
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  children: [
-                    // Full stars
-                    for (int i = 0; i < fullStars; i++)
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
-                    // Half star (optional)
-                    if (halfStars > 0)
-                      const Icon(Icons.star_half, color: Colors.amber, size: 16),
-                    // Empty stars
-                    for (int i = 0; i < emptyStars; i++)
-                      const Icon(Icons.star_border, color: Colors.amber, size: 16),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Details',
-                  style: TextStyle(color: primaryColor),
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
   }
-
-
 }
+
