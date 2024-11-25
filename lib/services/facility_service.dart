@@ -7,6 +7,39 @@ class FacilityService {
   final String collectionPath = 'facilities';
   final Logger logger = Logger();
 
+
+  /// Stream available dates from all facilities
+  Stream<List<DateTime>> streamAvailableDates() {
+    try {
+      logger.i('Streaming available dates from all facilities...');
+      return _firestore
+          .collection(collectionPath)
+          .snapshots()
+          .map((snapshot) {
+        List<DateTime> availableDates = [];
+
+        for (var doc in snapshot.docs) {
+          // Get the availability dates from each facility document
+          var facilityData = doc.data();
+          if (facilityData.containsKey('availabilityDates')) {
+            var dates = List<String>.from(facilityData['availabilityDates']);
+
+            // Convert the string dates to DateTime objects and add to the list
+            availableDates.addAll(
+              dates.map((date) => DateTime.parse(date)).toList(),
+            );
+          }
+        }
+
+        // Remove duplicates (if any) and return the list of unique available dates
+        return availableDates.toSet().toList()..sort();
+      });
+    } catch (e) {
+      logger.e('Error streaming available dates: $e', error: e);
+      throw Exception('Failed to stream available dates: $e');
+    }
+  }
+
   /// Fetch all facilities
   Future<List<FacilityModel>> fetchAllFacilities() async {
     try {

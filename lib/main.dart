@@ -1,3 +1,4 @@
+import 'package:facility_boking/models/booking_model.dart';
 import 'package:facility_boking/providers/auth_provider.dart';
 import 'package:facility_boking/providers/facility_provider.dart';
 import 'package:facility_boking/providers/user_provider.dart';
@@ -5,6 +6,7 @@ import 'package:facility_boking/screens/account_details.dart';
 import 'package:facility_boking/screens/add_facility_screen.dart';
 import 'package:facility_boking/screens/admin_dashboard.dart';
 import 'package:facility_boking/screens/booking_confirmation.dart';
+import 'package:facility_boking/screens/booking_details.dart';
 import 'package:facility_boking/screens/calendar_screen.dart';
 import 'package:facility_boking/screens/facility_details_screen.dart';
 import 'package:facility_boking/screens/forgot_password_screen.dart';
@@ -65,7 +67,8 @@ class MyApp extends StatelessWidget {
         '/add-facilities': (context) => const AddFacilityScreen(),
         '/payment-screen': (context) => const PaymentScreen(),
         '/payment-success': (context) => const PaymentSuccessScreen(),
-        '/account-details': (context) => const AccountDetailsScreen()
+        '/account-details': (context) => const AccountDetailsScreen(),
+        '/booking-details': (context) => BookingDetailsScreen(booking: ModalRoute.of(context)!.settings.arguments as BookingModel)
       },
     );
   }

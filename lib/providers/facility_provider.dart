@@ -140,4 +140,14 @@ class FacilityProvider with ChangeNotifier {
       logger.e('Error deleting facility with ID: $id: $e', error: e);
     }
   }
+
+  /// Stream available dates from all facilities (using FacilityService)
+  Stream<List<DateTime>> streamAvailableDates() {
+    try {
+      return _facilityService.streamAvailableDates();  // Delegate to the service
+    } catch (e) {
+      logger.e('Error fetching available dates: $e');
+      return const Stream.empty();
+    }
+  }
 }

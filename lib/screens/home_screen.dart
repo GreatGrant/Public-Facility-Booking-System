@@ -253,52 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               const SizedBox(height: 20),
-
-              // Availability Calendar
-              Text(
-                'Availability Calendar',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontSize: 18,
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TableCalendar(
-                    firstDay: DateTime.utc(2023, 1, 1),
-                    lastDay: DateTime.utc(2025, 12, 31),
-                    focusedDay: DateTime.now(),
-                    calendarStyle: CalendarStyle(
-                      todayDecoration: BoxDecoration(
-                        color: primaryColor,
-                        shape: BoxShape.circle,
-                      ),
-                      selectedDecoration: BoxDecoration(
-                        color: accentColor,
-                        shape: BoxShape.circle,
-                      ),
-                      todayTextStyle: TextStyle(color: Colors.white),
-                    ),
-                    headerStyle: HeaderStyle(
-                      titleCentered: true,
-                      formatButtonVisible: false,
-                      titleTextStyle: TextStyle(color: primaryColor),
-                    ),
-                    selectedDayPredicate: (day) {
-                      return isSameDay(day, DateTime.now());
-                    },
-                    onDaySelected: (selectedDay, focusedDay) {
-                      // Handle day selection
-                    },
-                  ),
-                ),
-              ),
+              
             ],
           ),
         ),

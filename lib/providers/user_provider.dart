@@ -75,4 +75,6 @@ class UserProvider with ChangeNotifier {
       logger.e('Error adding booking: $e');
     }
   }
+
+
 }
