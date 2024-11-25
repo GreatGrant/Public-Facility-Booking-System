@@ -2,6 +2,7 @@ import 'package:facility_boking/models/booking_model.dart';
 import 'package:facility_boking/providers/auth_provider.dart';
 import 'package:facility_boking/providers/facility_provider.dart';
 import 'package:facility_boking/providers/user_provider.dart';
+import 'package:facility_boking/screens/ModifyBookingScreen.dart';
 import 'package:facility_boking/screens/account_details.dart';
 import 'package:facility_boking/screens/add_facility_screen.dart';
 import 'package:facility_boking/screens/admin_dashboard.dart';
@@ -68,7 +69,8 @@ class MyApp extends StatelessWidget {
         '/payment-screen': (context) => const PaymentScreen(),
         '/payment-success': (context) => const PaymentSuccessScreen(),
         '/account-details': (context) => const AccountDetailsScreen(),
-        '/booking-details': (context) => BookingDetailsScreen(booking: ModalRoute.of(context)!.settings.arguments as BookingModel)
+        '/booking-details': (context) => BookingDetailsScreen(booking: ModalRoute.of(context)!.settings.arguments as BookingModel),
+        '/modify-booking' : (context) => ModifyBookingScreen(booking: ModalRoute.of(context)!.settings.arguments as BookingModel)
       },
     );
   }

@@ -79,23 +79,20 @@ class BookingDetailsScreen extends StatelessWidget {
               children: [
                 // Cancel Booking Button
                 ElevatedButton(
-                  onPressed: () {
-                    // Handle cancellation logic
-                    _showCancellationDialog(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
-                  child: const Text('Cancel Booking',style: TextStyle(color: Colors.white),),
-                ),
-                // Modify Booking Button
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle modification logic
+                  onPressed:  false ? () {
                     Navigator.pushNamed(context, '/modify-booking', arguments: booking);
-                  },
+                  } : null, // Disable button if booking isn't modifiable
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: false ? Colors.blue : Colors.grey,
+                  ),
+                  child: const Text('Cancel Booking', style: TextStyle(color: Colors.white)),
+                ),// Modify Booking Button
+                ElevatedButton(
+                  onPressed:  false ? () {
+                    Navigator.pushNamed(context, '/modify-booking', arguments: booking);
+                  } : null, // Disable button if booking isn't modifiable
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: false ? Colors.blue : Colors.grey,
                   ),
                   child: const Text('Modify Booking', style: TextStyle(color: Colors.white)),
                 ),
