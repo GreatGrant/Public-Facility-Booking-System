@@ -185,7 +185,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
 
-                  final bookings = snapshot.data!;
+                  // Limit to the first two bookings
+                  final bookings = snapshot.data!.take(2).toList(); // Take the first 2 bookings
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              
+
             ],
           ),
         ),
