@@ -1,4 +1,5 @@
 import 'package:facility_boking/providers/facility_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/booking_model.dart';
@@ -20,10 +21,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<UserProvider>(context, listen: false).fetchUserData();
-    });
-
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     facilityModel = args['facilityModel'];
     selectedDate = args['selectedDate'];
@@ -168,11 +165,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   // Payment Button
                   Center(
                     child: ElevatedButton.icon(
                       onPressed: () async {
+                        // Show loading indicator while performing the payment
                         showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -180,15 +177,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         );
 
                         try {
+                          // Simulate payment (replace with actual payment logic)
                           final paymentResult = await simulatePayment();
 
-                          if (!context.mounted) return; // Ensure context is still available
+                          // Check if the context is still valid before proceeding
+                          if (!context.mounted) return;
+
                           Navigator.pop(context); // Close the loading indicator
 
                           if (paymentResult['success']) {
-                            final userId = context.read<UserProvider>().userData?['id'];
+                            // Retrieve the user data from the UserProvider
+                            final User? user = FirebaseAuth.instance.currentUser;
+
+                            final userId = user?.uid;
                             if (userId == null) throw Exception('User data is missing');
 
+                            // Create a new booking
                             final newBooking = BookingModel(
                               id: DateTime.now().toString(),
                               userId: userId,
@@ -197,10 +201,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               bookedAt: DateTime.now(),
                             );
 
+                            // Add the booking via UserProvider
                             await context.read<UserProvider>().addBooking(newBooking);
-                            _removeBookedDate();
+                            _removeBookedDate(); // Remove booked date if necessary
 
+                            // Check if the context is still valid before showing the success dialog
                             if (!context.mounted) return;
+
+                            // Show success dialog
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -209,7 +217,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(context); // Close the dialog
                                       Navigator.pushReplacementNamed(context, '/payment-success');
                                     },
                                     child: const Text('OK'),
@@ -218,7 +226,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               ),
                             );
                           } else {
+                            // Payment failed, show error dialog
                             if (!context.mounted) return;
+
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -227,7 +237,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(context); // Close the dialog
                                     },
                                     child: const Text('Try Again'),
                                   ),
@@ -239,7 +249,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           debugPrint('Payment Error: $e');
                           debugPrint('StackTrace: $stackTrace');
 
-                          Navigator.pop(context); // Close the loading indicator
+                          // Close the loading indicator
+                          Navigator.pop(context);
+
+                          // Show error dialog
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
@@ -248,7 +261,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    Navigator.pop(context); // Close the dialog
                                   },
                                   child: const Text('OK'),
                                 ),
