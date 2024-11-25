@@ -3,7 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../models/facility_model.dart';
 import '../providers/facility_provider.dart';
-import '../widgets.dart';
+
+import 'package:flutter/material.dart';
+import '../models/facility_model.dart';
+import '../widgets/facilities_card.dart';
 
 class FacilitiesScreen extends StatefulWidget {
   const FacilitiesScreen({super.key});
@@ -88,7 +91,7 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
                     itemBuilder: (context, index) {
                       final facility = facilities[index];
 
-                      return FacilityCard(
+                      return FacilitiesCard(
                         facility: facility,
                         onTap: () {
                           // Navigate to the Facility Details screen
@@ -110,3 +113,5 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
     );
   }
 }
+
+
