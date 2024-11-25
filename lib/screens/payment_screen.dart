@@ -196,7 +196,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             final newBooking = BookingModel(
                               id: DateTime.now().toString(),
                               userId: userId,
-                              facilityId: facilityModel.id,
+                              facilityName: facilityModel.name,
                               status: 'Pending',
                               bookedAt: DateTime.now(),
                             );

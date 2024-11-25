@@ -1,10 +1,13 @@
 import 'package:facility_boking/models/facility_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../models/booking_model.dart';
 import '../providers/facility_provider.dart';
+import '../providers/user_provider.dart';
 import '../reusable_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,6 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final userProvider = Provider.of<UserProvider>(context);
+
+    // Stream user bookings
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final userBookingsStream = userProvider.streamUserBookings(userId);
+
 
     return Scaffold(
       backgroundColor: accentColor,
@@ -148,43 +157,99 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               const SizedBox(height: 20),
-
               // Booking History CTA
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Recent Bookings',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontSize: 18,
-                      color: primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Navigate to Booking History
-                    },
-                    child: Text(
-                      'View All',
-                      style: TextStyle(color: primaryColor),
-                    ),
-                  ),
-                ],
-              ),
-              ListTile(
-                leading: Icon(Icons.history, color: primaryColor),
-                title: Text(
-                  'Facility Name',
-                  style: TextStyle(color: textColor),
-                ),
-                subtitle: Text(
-                  'Last Booked: 10th Nov 2024',
-                  style: TextStyle(color: textColor.withOpacity(0.7)),
-                ),
-                trailing: Icon(Icons.arrow_forward, color: primaryColor),
-                onTap: () {
-                  // Open booking details
+              // Recent Bookings Section
+              // Recent Bookings Section
+              StreamBuilder<List<BookingModel>>(
+                stream: userBookingsStream,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error fetching bookings: ${snapshot.error}',
+                        style: theme.textTheme.bodyMedium?.copyWith(color: primaryColor),
+                      ),
+                    );
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No recent bookings available.',
+                        style: theme.textTheme.bodyMedium?.copyWith(color: primaryColor),
+                      ),
+                    );
+                  }
+
+                  final bookings = snapshot.data!;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title and "View All" button
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Recent Bookings',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontSize: 18,
+                                color: primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Navigate to Booking History
+                                Navigator.pushNamed(context, '/booking-history');
+                              },
+                              child: Text(
+                                'View All',
+                                style: TextStyle(color: primaryColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Booking list
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: bookings.length,
+                        itemBuilder: (context, index) {
+                          final booking = bookings[index];
+
+                          return ListTile(
+                            leading: Icon(Icons.history, color: primaryColor),
+                            title: Text(
+                              booking.facilityName,
+                              style: TextStyle(color: textColor),
+                            ),
+                            subtitle: Text(
+                              'Last Booked: ${booking.bookedAt.toLocal().toString().substring(0, 10)}', // Formatting the date
+                              style: TextStyle(color: textColor.withOpacity(0.7)),
+                            ),
+                            trailing: Icon(Icons.arrow_forward, color: primaryColor),
+                            onTap: () {
+                              // Navigate to booking details page
+                              Navigator.pushNamed(
+                                context,
+                                '/booking-details',
+                                arguments: booking,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  );
                 },
               ),
               const SizedBox(height: 20),
@@ -300,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: const [
                     Icon(Icons.star, color: Colors.amber, size: 16),
-                    Icon(Icons.star, color: Colors.amber, size: 16),
+  ok                  Icon(Icons.star, color: Colors.amber, size: 16),
                     Icon(Icons.star, color: Colors.amber, size: 16),
                     Icon(Icons.star, color: Colors.amber, size: 16),
                     Icon(Icons.star_border, color: Colors.amber, size: 16),

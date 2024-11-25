@@ -1,25 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import '../models/booking_model.dart';
+import '../services/booking_service.dart';
 import '../services/user_service.dart';
 
 class UserProvider with ChangeNotifier {
   Map<String, dynamic>? _userData;
+  List<BookingModel> _recentBookings = [];
+  List<BookingModel> _bookings = [];
+
+  List<BookingModel> get bookings => _bookings;
+
+  final BookingService _bookingService = BookingService();
   final UserService _userService = UserService();
+
   final Logger logger = Logger();
 
+  // Getter for user data
   Map<String, dynamic>? get userData => _userData;
 
-  List<BookingModel> get recentBookings {
-    if (_userData != null && _userData!['recentBookings'] != null) {
-      return List<BookingModel>.from(
-        _userData!['recentBookings'].map((data) =>
-            BookingModel.fromFirestore(data as Map<String, dynamic>, data['id'])),
-      );
-    }
-    return [];
-  }
+  // Getter for recent bookings
+  List<BookingModel> get recentBookings => _recentBookings;
 
+  /// Fetches user data from the database
   Future<void> fetchUserData() async {
     try {
       logger.i('Fetching user data...');
@@ -31,41 +35,44 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  /// Stream that listens for real-time updates on recent bookings
+  Stream<List<BookingModel>> streamUserBookings(String userId) {
+    try {
+      logger.i('Listening for real-time updates of bookings for user: $userId...');
+      return FirebaseFirestore.instance
+          .collection('bookings')
+          .where('userId', isEqualTo: userId)
+          .orderBy('bookedAt', descending: true)
+          .snapshots()
+          .map((querySnapshot) {
+        List<BookingModel> bookings = [];
+        for (var doc in querySnapshot.docs) {
+          // Log the raw document data before converting it to BookingModel
+          logger.i('Document data: ${doc.data()}');
+
+          bookings.add(BookingModel.fromFirestore(doc.data()));
+        }
+        logger.i('Real-time bookings update for user $userId: ${bookings.length} booking(s)');
+        return bookings;
+      });
+    } catch (e) {
+      logger.e('Error streaming bookings for user $userId: $e');
+      return const Stream.empty();
+    }
+  }
+
+
+  /// Adds a new booking for the user
   Future<void> addBooking(BookingModel booking) async {
     try {
       logger.i('Adding new booking: ${booking.toFirestore()}');
+      await _bookingService.addBooking(booking.toFirestore());
+      logger.i('Booking added successfully.');
 
-      // Ensure recentBookings exists and is a list
-      if (_userData != null) {
-        _userData!['recentBookings'] ??= [];
-        if (_userData!['recentBookings'] is! List) {
-          logger.w('recentBookings is not a valid list.');
-          throw Exception("recentBookings is not a valid list.");
-        }
-
-        // Log current state of recentBookings
-        logger.d('Current recentBookings: ${_userData!['recentBookings']}');
-
-        // Add the new booking locally
-        (_userData!['recentBookings'] as List).add(booking.toFirestore());
-        notifyListeners();
-
-        // Log updated state of recentBookings
-        logger.d('Updated recentBookings: ${_userData!['recentBookings']}');
-
-        // Update Firestore
-        await _userService.updateUserData(_userData!);
-
-        logger.i('Booking added successfully.');
-
-        // Notify listeners
-        notifyListeners();
-      } else {
-        logger.w('User data is not initialized.');
-        throw Exception("User data is not initialized.");
-      }
+      // Optionally, update bookings list
+      // await fetchBookings(booking.userId);
     } catch (e) {
-      logger.e('Error updating bookings: $e');
+      logger.e('Error adding booking: $e');
     }
   }
 }
