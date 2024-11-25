@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/facility_model.dart';
 import '../providers/facility_provider.dart';
+import '../widgets.dart';
 
 class FacilitiesScreen extends StatefulWidget {
   const FacilitiesScreen({super.key});
@@ -12,7 +13,6 @@ class FacilitiesScreen extends StatefulWidget {
 }
 
 class _FacilitiesScreenState extends State<FacilitiesScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -53,7 +53,7 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            // Facilities List
+            // Facilities List Header
             Text(
               'Available Facilities',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -63,6 +63,7 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
               ),
             ),
             const SizedBox(height: 10),
+            // Facilities Grid
             Expanded(
               child: Consumer<FacilityProvider>(
                 builder: (context, provider, child) {
@@ -79,51 +80,24 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
 
                   return GridView.builder(
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // For smaller devices or tablets
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
+                      crossAxisCount: 2, // Adjust for different device sizes
+                      crossAxisSpacing: 0,
+                      mainAxisSpacing: 0,
                     ),
                     itemCount: facilities.length,
                     itemBuilder: (context, index) {
                       final facility = facilities[index];
 
-                      return GestureDetector(
+                      return FacilityCard(
+                        facility: facility,
                         onTap: () {
-                          // Navigate to the Booking screen for the selected facility
+                          // Navigate to the Facility Details screen
                           Navigator.pushNamed(
                             context,
                             '/facility-details',
                             arguments: facility,
                           );
                         },
-                        child: Card(
-                          elevation: 4.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Facility Image
-                              Image.network(
-                                facility.imageUrl,
-                                height: 120,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  facility.name,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       );
                     },
                   );

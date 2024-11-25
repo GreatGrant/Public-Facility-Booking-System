@@ -191,11 +191,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
 
+                  // Limit to the first two bookings
                   final bookings = snapshot.data!.take(2).toList(); // Take the first 2 bookings
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Title and "View All" button
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
@@ -211,6 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             TextButton(
                               onPressed: () {
+                                // Navigate to Booking History
                                 Navigator.pushNamed(context, '/booking-history');
                               },
                               child: Text(
@@ -234,12 +237,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             leading: Icon(Icons.history, color: primaryColor),
                             title: Text(
                               booking.facilityName,
-                              style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+                              style: TextStyle(color: textColor),
                             ),
                             subtitle: Text(
-                              'Date: ${booking.date}',
-                              style: theme.textTheme.bodySmall?.copyWith(color: textColor),
+                              'Last Booked: ${booking.bookedAt.toLocal().toString().substring(0, 10)}', // Formatting the date
+                              style: TextStyle(color: textColor.withOpacity(0.7)),
                             ),
+                            trailing: Icon(Icons.arrow_forward, color: primaryColor),
+                            onTap: () {
+                              // Navigate to booking details page
+                              Navigator.pushNamed(
+                                context,
+                                '/booking-details',
+                                arguments: booking,
+                              );
+                            },
                           );
                         },
                       ),
@@ -250,6 +262,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Navigate to Booking Page
+          Navigator.pushNamed(context, '/facilities-screen');
+        },
+        label: Text('Book Now', style: TextStyle(color: accentColor)),
+        icon: Icon(Icons.add, color: accentColor),
+        backgroundColor: primaryColor,
       ),
     );
   }
