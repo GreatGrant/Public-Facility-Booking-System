@@ -314,8 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFacilityCard(
-      FacilityModel model, BuildContext context) {
+  Widget _buildFacilityCard(FacilityModel model, BuildContext context) {
     final facility = FacilityModel(
       id: model.id,
       name: model.name,
@@ -328,6 +327,11 @@ class _HomeScreenState extends State<HomeScreen> {
       location: model.location,
       price: model.price, // Dynamic data
     );
+
+    // Determine the number of full stars, half stars, and empty stars based on rating
+    int fullStars = model.rating.floor();
+    int halfStars = (model.rating - fullStars >= 0.5) ? 1 : 0;
+    int emptyStars = 5 - fullStars - halfStars;
 
     return GestureDetector(
       onTap: () {
@@ -358,17 +362,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
+                  overflow: TextOverflow.ellipsis,  // Truncate the name if it's too long
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
-                  children: const [
-                    Icon(Icons.star, color: Colors.amber, size: 16),
-  ok                  Icon(Icons.star, color: Colors.amber, size: 16),
-                    Icon(Icons.star, color: Colors.amber, size: 16),
-                    Icon(Icons.star, color: Colors.amber, size: 16),
-                    Icon(Icons.star_border, color: Colors.amber, size: 16),
+                  children: [
+                    // Full stars
+                    for (int i = 0; i < fullStars; i++)
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                    // Half star (optional)
+                    if (halfStars > 0)
+                      const Icon(Icons.star_half, color: Colors.amber, size: 16),
+                    // Empty stars
+                    for (int i = 0; i < emptyStars; i++)
+                      const Icon(Icons.star_border, color: Colors.amber, size: 16),
                   ],
                 ),
               ),
@@ -386,4 +395,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+
 }
