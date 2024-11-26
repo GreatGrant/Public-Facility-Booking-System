@@ -1,3 +1,4 @@
+import 'package:facility_boking/global_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,12 +29,13 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: GlobalVariables.accentColor,
       appBar: AppBar(
         title: Text(
           'Facilities',
-          style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+          style: theme.textTheme.titleMedium?.copyWith(color: GlobalVariables.accentColor),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: GlobalVariables.primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -52,7 +54,7 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
                   decoration: InputDecoration(
                     hintText: 'Search facilities...',
                     hintStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
-                    prefixIcon: const Icon(Icons.search, color: Colors.blue),
+                    prefixIcon: const Icon(Icons.search, color: GlobalVariables.primaryColor),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -69,7 +71,7 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
               'Available Facilities',
               style: theme.textTheme.titleMedium?.copyWith(
                 fontSize: 18,
-                color: Colors.blue,
+                color: GlobalVariables.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -84,7 +86,7 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
                     return Center(
                       child: Text(
                         'No facilities available.',
-                        style: theme.textTheme.bodyMedium?.copyWith(color: Colors.blue),
+                        style: theme.textTheme.bodyMedium?.copyWith(color: GlobalVariables.accentColor),
                       ),
                     );
                   }

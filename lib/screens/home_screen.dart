@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     "Events Center",
                     "Sports Center",
                     "Cultural Sites",
-                    "Conference Halls",
+                    "Conference Hall",
                     "Art Galleries",
                     "Community Halls",
                   ];

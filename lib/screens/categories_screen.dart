@@ -11,6 +11,10 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+  final Color primaryColor = const Color(0xFF0A72B1);
+  final Color accentColor = const Color(0xFFD9EEF3);
+  final Color textColor = Colors.black;
+
   String? category;
 
   @override
@@ -33,12 +37,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: accentColor,
       appBar: AppBar(
         title: Text(
           category ?? 'Loading...',
-          style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+          style: theme.textTheme.titleMedium?.copyWith(color: accentColor),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: primaryColor,
       ),
       body: category == null
           ? const Center(
