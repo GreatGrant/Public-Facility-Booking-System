@@ -190,6 +190,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 title: Text('View Reports', style: TextStyle(color: textColor)),
                 onTap: () {
                   // Navigate to Reports Screen
+                  Navigator.pushNamed(context, '/reports-screen');
                 },
               ),
               const SizedBox(height: 20),

@@ -21,6 +21,7 @@ import 'package:facility_boking/screens/manage_facilities.dart';
 import 'package:facility_boking/screens/payment_screen.dart';
 import 'package:facility_boking/screens/payment_success_screen.dart';
 import 'package:facility_boking/screens/profile_screen.dart';
+import 'package:facility_boking/screens/reports_screen.dart';
 import 'package:facility_boking/screens/search_facilities.dart';
 import 'package:facility_boking/screens/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
         '/facilities-screen' : (context) => const FacilitiesScreen(),
         '/search-facilities' : (context) => const SearchFacilitiesScreen(),
         '/category-screen' : (context) => const CategoryScreen(),
+        '/reports-screen' : (context) => const ReportsScreen(),
       },
     );
   }
