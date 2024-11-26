@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/facility_provider.dart';
+import '../models/facility_model.dart';
 
-class ManageFacilitiesScreen extends StatelessWidget {
+class ManageFacilitiesScreen extends StatefulWidget {
+  const ManageFacilitiesScreen({super.key});
+
+  @override
+  State<ManageFacilitiesScreen> createState() => _ManageFacilitiesScreenState();
+}
+
+class _ManageFacilitiesScreenState extends State<ManageFacilitiesScreen> {
   final Color primaryColor = const Color(0xFF0A72B1);
   final Color accentColor = const Color(0xFFD9EEF3);
   final Color textColor = Colors.black;
 
-  const ManageFacilitiesScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<FacilityProvider>(context, listen: false);
+    provider.fetchFacilities(); // Fetch facilities when the screen is loaded
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Color primaryColor = const Color(0xFF0A72B1); // Deep blue
 
     return Scaffold(
       appBar: AppBar(
@@ -43,23 +57,37 @@ class ManageFacilitiesScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Here, you'll dynamically load facilities, for now, it's static
-            ListTile(
-              leading: Icon(Icons.location_city, color: primaryColor),
-              title: Text('Facility Name', style: TextStyle(color: textColor)),
-              subtitle: Text('Facility Location', style: TextStyle(color: Colors.grey)),
-              trailing: Icon(Icons.edit, color: primaryColor),
-              onTap: () {
-                // Handle editing the facility
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.location_city, color: primaryColor),
-              title: Text('Facility Name', style: TextStyle(color: textColor)),
-              subtitle: Text('Facility Location', style: TextStyle(color: Colors.grey)),
-              trailing: Icon(Icons.edit, color: primaryColor),
-              onTap: () {
-                // Handle editing the facility
+            // Consumer to listen to changes in the FacilityProvider
+            Consumer<FacilityProvider>(
+              builder: (context, provider, child) {
+                final facilities = provider.facilities;
+
+                if (facilities.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No facilities available.',
+                      style: theme.textTheme.bodyMedium?.copyWith(color: primaryColor),
+                    ),
+                  );
+                }
+
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: facilities.length,
+                    itemBuilder: (context, index) {
+                      final facility = facilities[index];
+                      return ListTile(
+                        leading: Icon(Icons.location_city, color: primaryColor),
+                        title: Text(facility.name, style: TextStyle(color: textColor)),
+                        subtitle: Text(facility.location, style: const TextStyle(color: Colors.grey)),
+                        trailing: Icon(Icons.edit, color: primaryColor),
+                        onTap: () {
+                          // Handle editing the facility
+                        },
+                      );
+                    },
+                  ),
+                );
               },
             ),
             const SizedBox(height: 20),
