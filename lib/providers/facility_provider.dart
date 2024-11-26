@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';  // Import logger
 import '../models/facility_model.dart';
@@ -18,6 +20,7 @@ class FacilityProvider with ChangeNotifier {
   String? get error => _error;
   int get totalFacilities => _totalFacilities;
   List<FacilityModel> get featuredFacilities => _featuredFacilities;
+
 
   // Fetch all facilities
   Future<void> fetchFacilities() async {
@@ -150,4 +153,17 @@ class FacilityProvider with ChangeNotifier {
       return const Stream.empty();
     }
   }
+
+  // Search facilities by name or location
+  Stream<List<FacilityModel>> searchFacilities(String query) {
+    logger.i('Searching facilities by name or location with query: $query...');
+
+    try {
+      return _facilityService.searchFacilitiesByNameOrLocation(query);
+    } catch (e) {
+      logger.e('Error searching facilities by name or location: $e');
+      return const Stream.empty();
+    }
+  }
+
 }

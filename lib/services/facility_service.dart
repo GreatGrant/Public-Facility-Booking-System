@@ -55,6 +55,46 @@ class FacilityService {
     }
   }
 
+  /// Stream facilities based on a search query for name or location
+  Stream<List<FacilityModel>> searchFacilitiesByNameOrLocation(String query) {
+    try {
+      logger.i('Searching facilities by name or location with query: $query...');
+      final collection = _firestore.collection(collectionPath);
+
+      // Query by name
+      final nameQuery = collection
+          .where('name', isGreaterThanOrEqualTo: query)
+          .where('name', isLessThanOrEqualTo: '$query\uf8ff');
+
+      // Query by location
+      final locationQuery = collection
+          .where('location', isGreaterThanOrEqualTo: query)
+          .where('location', isLessThanOrEqualTo: '$query\uf8ff');
+
+      // Combine both queries
+      return nameQuery.snapshots().asyncExpand((nameSnapshot) {
+        return locationQuery.snapshots().map((locationSnapshot) {
+          final nameDocs = nameSnapshot.docs;
+          final locationDocs = locationSnapshot.docs;
+
+          // Combine and deduplicate documents
+          final allDocs = [
+            ...nameDocs,
+            ...locationDocs.where((locDoc) =>
+            !nameDocs.any((nameDoc) => nameDoc.id == locDoc.id))
+          ];
+
+          return allDocs.map((doc) {
+            return FacilityModel.fromFirestore(doc.data(), doc.id);
+          }).toList();
+        });
+      });
+    } catch (e) {
+      logger.e('Error searching facilities by name or location: $e', error: e);
+      throw Exception('Failed to search facilities by name or location: $e');
+    }
+  }
+
   /// Fetch facilities by category
   Future<List<FacilityModel>> fetchFacilitiesByCategory(String category) async {
     try {

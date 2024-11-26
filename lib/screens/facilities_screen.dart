@@ -42,16 +42,24 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
           children: [
             const SizedBox(height: 20),
             // Search Bar
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search facilities...',
-                hintStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
-                prefixIcon: const Icon(Icons.search, color: Colors.blue),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, '/search-facilities');
+              },
+              child: IgnorePointer(
+                ignoring: true,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search facilities...',
+                    hintStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
+                    prefixIcon: const Icon(Icons.search, color: Colors.blue),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
                 ),
               ),
             ),

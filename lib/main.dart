@@ -19,12 +19,12 @@ import 'package:facility_boking/screens/manage_facilities.dart';
 import 'package:facility_boking/screens/payment_screen.dart';
 import 'package:facility_boking/screens/payment_success_screen.dart';
 import 'package:facility_boking/screens/profile_screen.dart';
+import 'package:facility_boking/screens/search_facilities.dart';
 import 'package:facility_boking/screens/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'auth_wrapper.dart';
 import 'models/facility_model.dart';
 
 void main() async {
@@ -75,6 +75,7 @@ class MyApp extends StatelessWidget {
         '/modify-booking' : (context) => ModifyBookingScreen(booking: ModalRoute.of(context)!.settings.arguments as BookingModel),
         '/booking-history' : (context) => const BookingHistoryScreen(),
         '/facilities-screen' : (context) => const FacilitiesScreen(),
+        '/search-facilities' : (context) => const SearchFacilitiesScreen(),
       },
     );
   }

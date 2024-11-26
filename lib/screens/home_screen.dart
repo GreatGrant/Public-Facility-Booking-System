@@ -71,22 +71,40 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              // Search Bar
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search facilities...',
-                  hintStyle: TextStyle(color: textColor.withOpacity(0.6)),
-                  prefixIcon: Icon(Icons.search, color: primaryColor),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none,
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/search-facilities');
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.search, color: primaryColor, size: 24),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Search facilities...',
+                        style: TextStyle(
+                          color: textColor.withOpacity(0.7),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-
               // Categories
               Text(
                 'Categories',
