@@ -125,26 +125,40 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 3, // Replace with dynamic count
+                itemCount: 6, // Updated to reflect 6 categories
                 itemBuilder: (context, index) {
+                  // Define category details in lists
+                  final icons = [
+                    Icons.event,             // Event Centers
+                    Icons.sports_soccer,     // Sports Facilities
+                    Icons.place,             // Cultural Sites
+                    Icons.meeting_room,      // Conference Halls
+                    Icons.brush,             // Art Galleries
+                    Icons.group_add,         // Community Halls
+                  ];
+                  final labels = [
+                    "Events Center",
+                    "Sports Center",
+                    "Cultural Sites",
+                    "Conference Halls",
+                    "Art Galleries",
+                    "Community Halls",
+                  ];
+
                   return QuickActionCard(
-                    icon: index == 0
-                        ? Icons.sports_soccer
-                        : index == 1
-                        ? Icons.meeting_room
-                        : Icons.pool,
-                    label: index == 0
-                        ? "Sports Halls"
-                        : index == 1
-                        ? "Conference Rooms"
-                        : "Pools",
+                    icon: icons[index],
+                    label: labels[index],
                     onTap: () {
-                      // Navigate to the respective category
+                      // Pass the selected category to the next screen
+                      Navigator.pushNamed(
+                        context,
+                        '/category-screen', // The screen that will display the facilities for the selected category
+                        arguments: labels[index], // Pass category label or other data
+                      );
                     },
                   );
                 },
               ),
-
               const SizedBox(height: 20),
 
               // Featured Facilities

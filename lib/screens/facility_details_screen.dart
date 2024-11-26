@@ -56,7 +56,7 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                   child: CircularProgressIndicator(),
                 ),
                 errorWidget: (context, url, error) =>
-                const Icon(Icons.error, size: 100, color: Colors.red),
+                const Icon(Icons.broken_image, size: 100, color: Colors.red),
               ),
               const SizedBox(height: 16),
 

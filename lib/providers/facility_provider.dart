@@ -10,6 +10,7 @@ class FacilityProvider with ChangeNotifier {
   final Logger logger = Logger(); // Create an instance of Logger
 
   List<FacilityModel> _featuredFacilities = [];
+  List<FacilityModel> _categorisedFacilities = [];
   List<FacilityModel> _facilities = [];
   bool _isLoading = false;
   String? _error;
@@ -20,6 +21,7 @@ class FacilityProvider with ChangeNotifier {
   String? get error => _error;
   int get totalFacilities => _totalFacilities;
   List<FacilityModel> get featuredFacilities => _featuredFacilities;
+  List<FacilityModel> get categorisedFacilities => _categorisedFacilities;
 
 
   // Fetch all facilities
@@ -46,14 +48,14 @@ class FacilityProvider with ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    logger.i('Fetching facilities for category: $category...');
+    logger.i('Fetching $category facilities...');
 
     try {
-      _facilities = await _facilityService.fetchFacilitiesByCategory(category);
-      logger.i('Fetched ${_facilities.length} facilities for category: $category.');
+      _categorisedFacilities = await _facilityService.fetchFacilitiesByCategory(category);
+      logger.i('Fetched ${_categorisedFacilities.length} categorised facilities.');
     } catch (e) {
-      _error = 'Failed to fetch facilities for category: $category. Please try again.';
-      logger.e('Error fetching facilities for category: $category: $e', error: e);
+      _error = 'Failed to fetch $category categorised facilities. Please try again.';
+      logger.e('Error fetching $category categorised facilities: $e', error: e);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -106,6 +108,7 @@ class FacilityProvider with ChangeNotifier {
       _facilities.add(facility);
       logger.i('Facility added: ${facility.name}');
       notifyListeners();
+      fetchFacilities();
     } catch (e) {
       _error = 'Failed to add facility. Please try again.';
       logger.e('Error adding facility: $e', error: e);
@@ -138,6 +141,7 @@ class FacilityProvider with ChangeNotifier {
       _facilities.removeWhere((facility) => facility.id == id);
       logger.i('Facility deleted with ID: $id');
       notifyListeners();
+      fetchFacilities();
     } catch (e) {
       _error = 'Failed to delete facility. Please try again.';
       logger.e('Error deleting facility with ID: $id: $e', error: e);
@@ -145,12 +149,12 @@ class FacilityProvider with ChangeNotifier {
   }
 
   /// Stream available dates from all facilities (using FacilityService)
-  Stream<List<DateTime>> streamAvailableDates() {
+  Stream<List<DateTime>> streamAvailableDates() async* {
     try {
-      return _facilityService.streamAvailableDates();  // Delegate to the service
+      yield* _facilityService.streamAvailableDates();
     } catch (e) {
       logger.e('Error fetching available dates: $e');
-      return const Stream.empty();
+      yield []; // Or emit a state indicating failure
     }
   }
 

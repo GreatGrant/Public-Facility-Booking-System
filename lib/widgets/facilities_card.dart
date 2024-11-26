@@ -46,7 +46,7 @@ class FacilitiesCard extends StatelessWidget {
                 },
                 errorBuilder: (context, error, stackTrace) => const Icon(
                   Icons.broken_image,
-                  size: 80,
+                  size: 75,
                   color: Colors.grey,
                 ),
               ),

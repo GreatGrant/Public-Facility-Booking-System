@@ -10,6 +10,7 @@ import 'package:facility_boking/screens/booking_confirmation.dart';
 import 'package:facility_boking/screens/booking_details.dart';
 import 'package:facility_boking/screens/bookings_history.dart';
 import 'package:facility_boking/screens/calendar_screen.dart';
+import 'package:facility_boking/screens/categories_screen.dart';
 import 'package:facility_boking/screens/facilities_screen.dart';
 import 'package:facility_boking/screens/facility_details_screen.dart';
 import 'package:facility_boking/screens/forgot_password_screen.dart';
@@ -76,6 +77,7 @@ class MyApp extends StatelessWidget {
         '/booking-history' : (context) => const BookingHistoryScreen(),
         '/facilities-screen' : (context) => const FacilitiesScreen(),
         '/search-facilities' : (context) => const SearchFacilitiesScreen(),
+        '/category-screen' : (context) => const CategoryScreen(),
       },
     );
   }

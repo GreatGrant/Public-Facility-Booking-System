@@ -98,18 +98,18 @@ class FacilityService {
   /// Fetch facilities by category
   Future<List<FacilityModel>> fetchFacilitiesByCategory(String category) async {
     try {
-      logger.i('Fetching facilities for category: $category...');
+      logger.i('Fetching facilities by $category category...');
       final snapshot = await _firestore
           .collection(collectionPath)
           .where('category', isEqualTo: category)
           .get();
-      logger.i('Fetched ${snapshot.size} facilities for category: $category.');
+      logger.i('Fetched ${snapshot.size} $category facilities category.');
       return snapshot.docs
           .map((doc) => FacilityModel.fromFirestore(doc.data(), doc.id))
           .toList();
     } catch (e) {
-      logger.e('Error fetching facilities by category: $e', error: e);
-      throw Exception('Failed to fetch facilities by category: $e');
+      logger.e('Error fetching featured facilities: $e', error: e);
+      throw Exception('Failed to fetch featured facilities: $e');
     }
   }
 
