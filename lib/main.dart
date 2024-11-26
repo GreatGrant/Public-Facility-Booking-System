@@ -1,5 +1,6 @@
 import 'package:facility_boking/models/booking_model.dart';
 import 'package:facility_boking/providers/auth_provider.dart';
+import 'package:facility_boking/providers/bookings_provider.dart';
 import 'package:facility_boking/providers/facility_provider.dart';
 import 'package:facility_boking/providers/user_provider.dart';
 import 'package:facility_boking/screens/ModifyBookingScreen.dart';
@@ -38,6 +39,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()..fetchUserData()),
         ChangeNotifierProvider(create: (_) => FacilityProvider()),
+        ChangeNotifierProvider(create: (_) => BookingsProvider()),
       ],
       child: const MyApp(),
     ),

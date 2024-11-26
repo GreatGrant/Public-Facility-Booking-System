@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -165,8 +166,9 @@ class ProfileScreen extends StatelessWidget {
 
                 // Logout Button
                 OutlinedButton.icon(
-                  onPressed: () {
+                  onPressed: () async {
                     // Handle logout logic here
+                    await FirebaseAuth.instance.signOut();
                     Navigator.pushReplacementNamed(context, '/login');
                   },
                   icon: Icon(Icons.logout, color: primaryColor),

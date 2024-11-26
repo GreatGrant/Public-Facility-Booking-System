@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/bookings_provider.dart';
 import '../providers/facility_provider.dart';
 
 class AdminDashboard extends StatefulWidget {
@@ -26,6 +28,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
     // Call fetchTotalFacilities when the screen is first loaded
     final provider = Provider.of<FacilityProvider>(context, listen: false);
     provider.fetchTotalFacilities();
+
+    final bookingsProvider = Provider.of<BookingsProvider>(context, listen: false);
+    bookingsProvider.fetchTodaysBookings();
+
   }
 
   @override
@@ -42,8 +48,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
         actions: [
           IconButton(
             icon: Icon(Icons.logout, color: accentColor),
-            onPressed: () {
-              // Handle logout
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, '/login');
             },
           ),
         ],
@@ -88,8 +95,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         },
                       ),
                       _buildStatCard('Active Users', '150', Icons.people),
-                      _buildStatCard('Bookings Today', '5', Icons.calendar_today),
-                      _buildStatCard('Revenue', '\$500', Icons.attach_money),
+                      Consumer<BookingsProvider>(
+                        builder: (context, provider, child) {
+                          return _buildStatCard(
+                            'Bookings Today',
+                            provider.todaysBookings.length.toString(),
+                            Icons.calendar_today,
+                          );
+                        },
+                      ),
+                      _buildStatCard('Revenue', '₦500', Icons.attach_money),
                     ],
                   );
                 },
@@ -203,7 +218,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 Expanded(
                   child: Text(
                     title,
-                    style: TextStyle(color: Colors.black54, fontSize: 14),
+                    style: const TextStyle(color: Colors.black54, fontSize: 14),
                     softWrap: true,  // Allows wrapping of text if needed
                   ),
                 ),
