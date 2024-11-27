@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../reusable_widgets.dart';
+import '../widgets/loading_indicator.dart';
 
 class SignupScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -188,16 +189,7 @@ class SignupScreen extends StatelessWidget {
 
                   // Show Lottie animation if loading
                   if (authProvider.isLoading)
-                    Container(
-                      color: Colors.black.withOpacity(0.5), // Add semi-transparent overlay
-                      child: Center(
-                        child: Lottie.asset(
-                          'assets/loading_animation.json',
-                          width: 150,
-                          height: 150,
-                        ),
-                      ),
-                    ),
+                    const LoadingIndicator(),
                 ],
               );
             },
