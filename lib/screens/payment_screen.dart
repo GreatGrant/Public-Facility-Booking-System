@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:facility_boking/providers/facility_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import '../models/booking_model.dart';
 import '../models/facility_model.dart';
 import '../providers/user_provider.dart';
@@ -192,14 +194,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             final userId = user?.uid;
                             if (userId == null) throw Exception('User data is missing');
 
+                            const uuid = Uuid();
+
                             // Create a new booking
                             final newBooking = BookingModel(
-                              id: DateTime.now().toString(),
+                              id: uuid.v4(),
                               userId: userId,
                               facilityName: facilityModel.name,
                               status: 'Pending',
                               bookedAt: DateTime.now(),
                             );
+
+                            await FirebaseFirestore.instance
+                                .collection('bookings')
+                                .doc(newBooking.id)
+                                .set(newBooking.toFirestore());
 
                             // Add the booking via UserProvider
                             await context.read<UserProvider>().addBooking(newBooking);

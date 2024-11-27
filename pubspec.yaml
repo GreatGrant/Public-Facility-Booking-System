@@ -47,6 +47,8 @@ dependencies:
   image_picker: ^1.1.2
   logger: ^2.5.0
   fl_chart: ^0.69.2
+  uuid: ^4.5.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

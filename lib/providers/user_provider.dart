@@ -66,7 +66,7 @@ class UserProvider with ChangeNotifier {
   Future<void> addBooking(BookingModel booking) async {
     try {
       logger.i('Adding new booking: ${booking.toFirestore()}');
-      await _bookingService.addBooking(booking.toFirestore());
+      await _bookingService.addBooking(booking);
       logger.i('Booking added successfully.');
 
       // Optionally, update bookings list

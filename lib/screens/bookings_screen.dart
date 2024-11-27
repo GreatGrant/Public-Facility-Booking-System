@@ -11,6 +11,12 @@ class BookingsScreen extends StatefulWidget {
 }
 
 class _BookingsScreenState extends State<BookingsScreen> {
+  final Color primaryColor = const Color(0xFF0A72B1);
+  // Deep blue
+  final Color accentColor = const Color(0xFFD9EEF3);
+  // Light blue
+  final Color textColor = Colors.black;
+
   @override
   void initState() {
     super.initState();
@@ -22,11 +28,14 @@ class _BookingsScreenState extends State<BookingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bookingsProvider = Provider.of<BookingsProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bookings'),
+        title: Text('Bookings',
+            style: theme.textTheme.titleMedium?.copyWith(color: accentColor)
+        ),
         backgroundColor: const Color(0xFF0A72B1), // Deep blue color
       ),
       body: bookingsProvider.isLoading
@@ -70,12 +79,29 @@ class BookingCard extends StatelessWidget {
                   booking.facilityName,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Chip(
-                  label: Text(
-                    booking.status,
-                    style: const TextStyle(color: Colors.white),
+                PopupMenuButton<String>(
+                  onSelected: (newStatus) => _updateStatus(context, newStatus),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'Pending',
+                      child: Text('Pending'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'Approved',
+                      child: Text('Approved'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'Cancelled',
+                      child: Text('Cancelled'),
+                    ),
+                  ],
+                  child: Chip(
+                    label: Text(
+                      booking.status,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: _getStatusColor(booking.status),
                   ),
-                  backgroundColor: _getStatusColor(booking.status),
                 ),
               ],
             ),
@@ -95,6 +121,11 @@ class BookingCard extends StatelessWidget {
     );
   }
 
+  void _updateStatus(BuildContext context, String newStatus) {
+    Provider.of<BookingsProvider>(context, listen: false)
+        .updateBookingStatus(booking.id, newStatus);
+  }
+
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Approved':
@@ -110,4 +141,3 @@ class BookingCard extends StatelessWidget {
     return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
   }
 }
-

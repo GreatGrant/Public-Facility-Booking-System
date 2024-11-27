@@ -7,9 +7,11 @@ class BookingService {
   final Logger logger = Logger();
 
   // Add a new booking
-  Future<void> addBooking(Map<String, dynamic> bookingData) async {
+  Future<void> addBooking(BookingModel newBooking) async {
     try {
-      await _firestore.collection('bookings').add(bookingData);
+      await _firestore.collection('bookings')
+          .doc(newBooking.id)
+          .set(newBooking.toFirestore());
     } catch (e) {
       throw Exception('Error adding booking: $e');
     }
@@ -75,6 +77,22 @@ class BookingService {
     } catch (e) {
       logger.e('Error fetching bookings for today: $e', error: e);
       throw Exception('Failed to fetch today\'s bookings: $e');
+    }
+  }
+
+  // Update booking status
+  Future<void> updateBookingStatus(String bookingId, String newStatus) async {
+    try {
+      final docRef = FirebaseFirestore.instance.collection('bookings').doc(bookingId);
+      final docSnapshot = await docRef.get();
+
+      if (!docSnapshot.exists) {
+        throw Exception('Booking with ID $bookingId not found.');
+      }
+
+      await docRef.update({'status': newStatus});
+    } catch (e) {
+      throw Exception('Error updating booking status: $e');
     }
   }
 
