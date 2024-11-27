@@ -116,20 +116,20 @@ class FacilityProvider with ChangeNotifier {
   }
 
   // Update a facility
-  Future<void> updateFacility(String id, FacilityModel updatedFacility) async {
-    logger.i('Updating facility with ID: $id...');
+  Future<void> updateFacility(FacilityModel updatedFacility) async {
+    logger.i('Updating facility with ID: $updatedFacility.id...');
 
     try {
-      await _facilityService.updateFacility(id, updatedFacility);
-      final index = _facilities.indexWhere((facility) => facility.id == id);
+      await _facilityService.updateFacility(updatedFacility.id, updatedFacility);
+      final index = _facilities.indexWhere((facility) => facility.id == updatedFacility.id);
       if (index != -1) {
         _facilities[index] = updatedFacility;
-        logger.i('Facility updated with ID: $id');
+        logger.i('Facility updated with ID: $updatedFacility.id');
         notifyListeners();
       }
     } catch (e) {
       _error = 'Failed to update facility. Please try again.';
-      logger.e('Error updating facility with ID: $id: $e', error: e);
+      logger.e('Error updating facility with ID: $updatedFacility.id: $e', error: e);
     }
   }
 

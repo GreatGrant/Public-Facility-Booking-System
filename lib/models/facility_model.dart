@@ -23,6 +23,32 @@ class FacilityModel {
     required this.price, // Added price to the constructor
   });
 
+  // CopyWith method to create a copy of the model with some updated fields
+  FacilityModel copyWith({
+    String? name,
+    String? imageUrl,
+    String? category,
+    String? description,
+    double? rating,
+    bool? isFeatured,
+    List<DateTime>? availabilityDates,
+    String? location,
+    double? price,
+  }) {
+    return FacilityModel(
+      id: this.id,
+      name: name ?? this.name,
+      imageUrl: imageUrl ?? this.imageUrl,
+      category: category ?? this.category,
+      description: description ?? this.description,
+      rating: rating ?? this.rating,
+      isFeatured: isFeatured ?? this.isFeatured,
+      availabilityDates: availabilityDates ?? this.availabilityDates,
+      location: location ?? this.location,
+      price: price ?? this.price,
+    );
+  }
+
   factory FacilityModel.fromFirestore(Map<String, dynamic> data, String id) {
     return FacilityModel(
       id: id,

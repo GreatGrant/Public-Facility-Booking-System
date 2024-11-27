@@ -45,7 +45,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     // Update the facility in the provider
     facilityModel.availabilityDates.remove(selectedDate);
-    facilityProvider.updateFacility(facilityModel.id, facilityModel);
+    facilityProvider.updateFacility(facilityModel);
 
     // Optionally show a success message
     ScaffoldMessenger.of(context).showSnackBar(

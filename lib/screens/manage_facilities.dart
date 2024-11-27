@@ -82,7 +82,7 @@ class _ManageFacilitiesScreenState extends State<ManageFacilitiesScreen> {
                         subtitle: Text(facility.location, style: const TextStyle(color: Colors.grey)),
                         trailing: Icon(Icons.edit, color: primaryColor),
                         onTap: () {
-                          // Handle editing the facility
+                          Navigator.pushNamed(context, '/edit-facility', arguments: facility);
                         },
                       );
                     },
