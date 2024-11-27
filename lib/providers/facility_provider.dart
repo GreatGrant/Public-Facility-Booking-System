@@ -8,6 +8,7 @@ import '../services/facility_service.dart';
 class FacilityProvider with ChangeNotifier {
   final FacilityService _facilityService = FacilityService();
   final Logger logger = Logger(); // Create an instance of Logger
+  double _totalRevenue = 0.0;
 
   List<FacilityModel> _featuredFacilities = [];
   List<FacilityModel> _categorisedFacilities = [];
@@ -17,6 +18,8 @@ class FacilityProvider with ChangeNotifier {
   int _totalFacilities = 0;
 
   List<FacilityModel> get facilities => _facilities;
+  double get totalRevenue => _totalRevenue;
+
   bool get isLoading => _isLoading;
   String? get error => _error;
   int get totalFacilities => _totalFacilities;
@@ -156,6 +159,16 @@ class FacilityProvider with ChangeNotifier {
       logger.e('Error fetching available dates: $e');
       yield []; // Or emit a state indicating failure
     }
+  }
+
+  // Stream to listen to the total revenue
+  // Stream the total revenue from the service
+  Stream<double> get streamTotalRevenue {
+    return _facilityService.streamTotalRevenue().map((revenue) {
+      _totalRevenue = revenue;  // Update the internal state
+      notifyListeners();  // Notify listeners when the revenue changes
+      return revenue;
+    });
   }
 
   // Search facilities by name or location

@@ -156,6 +156,38 @@ class FacilityService {
     }
   }
 
+  /// Fetch total revenue (sum of all facility prices)
+  Stream<double> streamTotalRevenue() async* {
+    try {
+      logger.i('Starting stream for total revenue...');
+
+      // This could be a periodic fetch or listen to real-time updates (e.g., Firestore snapshot stream)
+      await for (var snapshot in _firestore.collection(collectionPath).snapshots()) {
+        double totalRevenue = 0.0;
+
+        // Iterate over all facilities and sum their prices
+        for (var doc in snapshot.docs) {
+          var facilityData = doc.data();
+          if (facilityData.containsKey('price')) {
+            // Ensure price is a valid number
+            final price = facilityData['price'];
+            if (price is num) {
+              totalRevenue += price.toDouble();
+            }
+          }
+        }
+
+        // Yield the total revenue
+        logger.i('Current total revenue: ₦$totalRevenue');
+        yield totalRevenue;
+      }
+    } catch (e) {
+      logger.e('Error streaming total revenue: $e', error: e);
+      yield 0.0; // Yield 0 or a default value in case of error
+    }
+  }
+
+
   /// Update a facility
   Future<void> updateFacility(String id, FacilityModel facility) async {
     try {
