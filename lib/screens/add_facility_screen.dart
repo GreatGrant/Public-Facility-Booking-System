@@ -18,6 +18,8 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+
   final Color primaryColor = const Color(0xFF0A72B1);
   final Color accentColor = const Color(0xFFD9EEF3);
 
@@ -28,9 +30,9 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
 
   final List<String> categories = [
     'Sports Center',
-    'Community Hall',
+    'Conference Hall',
     'Co-Working Space',
-    'Gym',
+    'Events Center',
     'Meeting Room'
   ];
 
@@ -189,7 +191,7 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 4,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Facility Description',
                     labelStyle: TextStyle(color: Colors.white),
                     border: OutlineInputBorder(),
@@ -205,6 +207,36 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
                   "Add a description for the facility.",
                   style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
                 ),
+                const SizedBox(height: 15),
+
+                TextFormField(
+                  controller: _priceController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Price',
+                    prefixIcon: const Icon(Icons.monetization_on, color: Color(0xFF0A72B1)),
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please provide a price';
+                    }
+                    final price = double.tryParse(value);
+                    if (price == null || price <= 0) {
+                      return 'Please enter a valid price';
+                    }
+                    return null;
+                  },
+                ),
+                Text(
+                  "Add a price for the facility.",
+                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
+                ),
+
                 const SizedBox(height: 15),
 
                 // Availability Dates
@@ -296,7 +328,7 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
           availabilityDates: availabilityDates,
           rating: 4.5,
           isFeatured: false,
-          price: 100000,
+          price: double.tryParse(_priceController.text.trim()) ?? 100000,
         );
 
         // Add the facility
