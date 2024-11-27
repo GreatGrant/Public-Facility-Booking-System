@@ -10,6 +10,7 @@ import 'package:facility_boking/screens/admin_dashboard.dart';
 import 'package:facility_boking/screens/booking_confirmation.dart';
 import 'package:facility_boking/screens/booking_details.dart';
 import 'package:facility_boking/screens/bookings_history.dart';
+import 'package:facility_boking/screens/bookings_screen.dart';
 import 'package:facility_boking/screens/calendar_screen.dart';
 import 'package:facility_boking/screens/categories_screen.dart';
 import 'package:facility_boking/screens/facilities_screen.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
         '/search-facilities' : (context) => const SearchFacilitiesScreen(),
         '/category-screen' : (context) => const CategoryScreen(),
         '/reports-screen' : (context) => const ReportsScreen(),
+        '/bookings' : (context) => const BookingsScreen(),
       },
     );
   }

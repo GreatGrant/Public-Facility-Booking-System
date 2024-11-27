@@ -151,7 +151,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 leading: Icon(Icons.book_online, color: primaryColor),
                 title: Text('View Bookings', style: TextStyle(color: textColor)),
                 onTap: () {
-                  // Navigate to Booking List Screen
+                  Navigator.pushNamed(context, '/bookings');
                 },
               ),
               const SizedBox(height: 20),

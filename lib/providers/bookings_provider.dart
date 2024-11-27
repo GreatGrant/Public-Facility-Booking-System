@@ -1,3 +1,4 @@
+import 'package:facility_boking/models/booking_model.dart';
 import 'package:facility_boking/services/booking_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
@@ -9,12 +10,16 @@ class BookingsProvider extends ChangeNotifier{
   bool _isLoading = false;
   String? _error;
   int _totalBookings = 0;
+
   final Logger logger = Logger();
 
   bool get isLoading => _isLoading;
   String? get error => _error;
+  int get totalBookings => _totalBookings;
+  List<BookingModel> _bookings = [];
 
   List<Map<String, dynamic>> _todaysBookings = [];
+  List<BookingModel> get bookings => _bookings;
 
   List<Map<String, dynamic>> get todaysBookings => _todaysBookings;
 
@@ -54,4 +59,23 @@ class BookingsProvider extends ChangeNotifier{
       notifyListeners();
     }
   }
+
+  Future<void> fetchAllBookings() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    logger.i('Fetching all facilities...');
+
+    try {
+      _bookings = await _bookingService.fetchAllBookings();
+      logger.i('Fetched ${_bookings.length} bookings.');
+    } catch (e) {
+      _error = 'Failed to fetch bookings. Please try again.';
+      logger.e('Error fetching all bookings: $e', error: e);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
 }

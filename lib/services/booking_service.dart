@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:facility_boking/models/booking_model.dart';
 import 'package:logger/logger.dart';
 
 class BookingService {
@@ -38,6 +39,20 @@ class BookingService {
     } catch (e) {
       logger.e('Error fetching total facilities count: $e', error: e);
       throw Exception('Failed to fetch total facilities: $e');
+    }
+  }
+
+  Future<List<BookingModel>> fetchAllBookings() async {
+    try {
+      logger.i('Fetching all bookings...');
+      final snapshot = await _firestore.collection('bookings').get();
+      logger.i('Fetched ${snapshot.size} bookings.');
+      return snapshot.docs
+          .map((doc) => BookingModel.fromFirestore(doc.data()))
+          .toList();
+    } catch (e) {
+      logger.e('Error fetching all bookings: $e', error: e);
+      throw Exception('Failed to fetch all bookings: $e');
     }
   }
 
