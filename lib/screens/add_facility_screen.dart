@@ -29,11 +29,12 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
   String? selectedCategory;
 
   final List<String> categories = [
-    'Sports Center',
-    'Conference Hall',
-    'Co-Working Space',
-    'Events Center',
-    'Meeting Room'
+    "Events Center",
+    "Sports Center",
+    "Cultural Sites",
+    "Conference Hall",
+    "Art Galleries",
+    "Community Halls",
   ];
 
   final ImagePicker _picker = ImagePicker();
