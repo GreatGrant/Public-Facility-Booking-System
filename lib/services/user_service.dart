@@ -33,25 +33,53 @@ class UserService {
     }
   }
 
-  // Update user data in Firestore
-  Future<void> updateUserData(Map<String, dynamic> userData) async {
+// Update user data in Firestore
+  Future<void> updateUserData(String userId, Map<String, dynamic> userData) async {
     try {
-      User? user = _auth.currentUser;
-      if (user == null) {
-        logger.w('No user is logged in while trying to update data');
-        throw Exception("No user is logged in");
-      }
-
-      logger.i('Updating user data for user ID: ${user.uid}');
-      logger.d('Data to update: ${userData['recentBookings']}');
-
-      await _firestore.collection('users').doc(user.uid).update({
-        'recentBookings': userData['recentBookings'] ?? [],
-      });
-
-      logger.i('User data successfully updated in Firestore');
+      await _firestore.collection('users').doc(userId).update(userData);
+      logger.i('User data successfully updated for user ID: $userId');
     } catch (e) {
       logger.e('Error updating user data: $e');
+      rethrow;
+    }
+  }
+
+  // Delete user from Firestore
+  Future<void> deleteUser(String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).delete();
+      logger.i('User successfully deleted for user ID: $userId');
+    } catch (e) {
+      logger.e('Error deleting user: $e');
+      throw e;
+    }
+  }
+
+  // Fetch all users from Firestore
+  Future<List<Map<String, dynamic>>> fetchAllUsers() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection('users').get();
+      List<Map<String, dynamic>> users = snapshot.docs.map((doc) {
+        return doc.data() as Map<String, dynamic>;
+      }).toList();
+      logger.i('All users fetched successfully');
+      return users;
+    } catch (e) {
+      logger.e('Error fetching all users: $e');
+      throw e;
+    }
+  }
+
+  Future<int> getTotalUsers() async {
+    try {
+      // Fetch the count of users in the 'users' collection
+      QuerySnapshot querySnapshot = await _firestore.collection('users').get();
+      int totalUsers = querySnapshot.docs.length;
+
+      logger.i('Total number of users: $totalUsers');
+      return totalUsers;
+    } catch (e) {
+      logger.e('Error fetching total users: $e');
       throw e;
     }
   }

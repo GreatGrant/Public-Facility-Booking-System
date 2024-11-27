@@ -161,13 +161,10 @@ class FacilityProvider with ChangeNotifier {
     }
   }
 
-  // Stream to listen to the total revenue
-  // Stream the total revenue from the service
-  Stream<double> get streamTotalRevenue {
-    return _facilityService.streamTotalRevenue().map((revenue) {
-      _totalRevenue = revenue;  // Update the internal state
-      notifyListeners();  // Notify listeners when the revenue changes
-      return revenue;
+  void _streamTotalRevenue() {
+    _facilityService.streamTotalRevenue().listen((totalRevenue) {
+      _totalRevenue = totalRevenue;
+      notifyListeners();
     });
   }
 

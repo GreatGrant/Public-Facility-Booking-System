@@ -104,22 +104,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           );
                         },
                       ),
-                      StreamBuilder<double>(
-                        stream: Provider.of<FacilityProvider>(context).streamTotalRevenue,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return _buildStatCard('Revenue', '₦0.00', Icons.money);  // Show loading state
-                          } else if (snapshot.hasError) {
-                            return _buildStatCard('Revenue', '₦0.00', Icons.money);  // Show default in case of error
-                          } else if (snapshot.hasData) {
-                            return _buildStatCard(
-                              'Revenue',
-                              '₦${snapshot.data?.toStringAsFixed(2)}',  // Display formatted revenue
-                              Icons.money,
-                            );
-                          } else {
-                            return _buildStatCard('Revenue', '₦0.00', Icons.money);
-                          }
+                      Consumer<FacilityProvider>(
+                        builder: (context, facilityProvider, child) {
+                          return _buildStatCard(
+                            'Total Revenue',
+                          '₦${facilityProvider.totalRevenue}',
+                            Icons.calendar_today,
+                          );
                         },
                       ),
                     ],
@@ -187,7 +178,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 leading: Icon(Icons.people, color: primaryColor),
                 title: Text('Manage Users', style: TextStyle(color: textColor)),
                 onTap: () {
-
+                  Navigator.pushNamed(context, '/manage-users');
                 },
               ),
               const SizedBox(height: 20),
