@@ -13,15 +13,12 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black.withOpacity(0.5),
-      child: Center(
-        child: Lottie.asset(
-          'assets/loading_animation.json',
-          width: width,
-          height: height,
+    return Center(
+      child: Lottie.asset(
+        'assets/loading_animation.json',
+        width: width,
+        height: height,
 
-        ),
       ),
     );
   }

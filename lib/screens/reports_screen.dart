@@ -1,13 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ReportsScreen extends StatelessWidget {
+import '../providers/bookings_provider.dart';
+import '../providers/facility_provider.dart';
+import '../providers/user_provider.dart';
+
+class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
 
+  @override
+  State<ReportsScreen> createState() => _ReportsScreenState();
+}
+
+class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final Color primaryColor = const Color(0xFF0A72B1); // Deep blue
     final Color accentColor = const Color(0xFFD9EEF3); // Light blue
+
+    @override
+    void initState() {
+      super.initState();
+      // Call fetchTotalFacilities when the screen is first loaded
+      final facilitiesProvider = Provider.of<FacilityProvider>(context, listen: false);
+      facilitiesProvider.fetchTotalFacilities();
+
+
+      final bookingsProvider = Provider.of<BookingsProvider>(context, listen: false);
+      bookingsProvider.fetchTodaysBookings();
+
+      final usersProvider = Provider.of<UserProvider>(context, listen: false);
+      usersProvider.getTotalUsers();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -47,10 +72,40 @@ class ReportsScreen extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  _buildReportTile('Revenue Summary', 'Total Revenue: ₦500,000', Icons.attach_money),
-                  _buildReportTile('User Activity', 'New Users: 120', Icons.people),
-                  _buildReportTile('Bookings Summary', 'Total Bookings: 80', Icons.calendar_today),
-                  _buildReportTile('Facility Utilization', 'Facilities Booked: 75%', Icons.location_city),
+                  // Consumer<FacilityProvider>(
+                  //   builder: (context, facilityProvider, child) {
+                  //     return _buildReportTile(
+                  //         'Revenue Summary',
+                  //         'Total Revenue: ₦${facilityProvider.totalRevenue}',
+                  //         Icons.attach_money);
+                  //   },
+                  // ),
+                  Consumer<UserProvider>(
+                    builder: (context, provider, child) {
+                      return _buildReportTile(
+                          'User Activity',
+                          'New Users: ${provider.totalUsers}',
+                          Icons.people
+                      );
+                    },
+                  ),
+                  // Consumer<BookingsProvider>(
+                  //   builder: (context, provider, child) {
+                  //     return _buildReportTile(
+                  //         'Bookings Summary',
+                  //         'Total Bookings: ${provider.todaysBookings}',
+                  //         Icons.calendar_today);
+                  //   },
+                  // ),
+                  // // Consumer<FacilityProvider>(
+                  //   builder: (context, facilityProvider, child) {
+                  //     return _buildReportTile(
+                  //           'Facility Utilization',
+                  //           'Facilities Booked: ${facilityProvider.bookedFacilitiesPercentage.toStringAsFixed(2)}%',
+                  //           Icons.location_city
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),

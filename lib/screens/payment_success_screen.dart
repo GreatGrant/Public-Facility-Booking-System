@@ -34,6 +34,7 @@ class PaymentSuccessScreen extends StatelessWidget {
             // Success message
             Text(
               'Your booking was successful!',
+              textAlign: TextAlign.center,
               style: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: primaryColor,
@@ -42,11 +43,11 @@ class PaymentSuccessScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Confirmation message
-            Text(
-              'You will receive an email with the booking details.',
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
+            // Text(
+            //   'You will receive an email with the booking details.',
+            //   style: theme.textTheme.bodyMedium,
+            //   textAlign: TextAlign.center,
+            // ),
             const SizedBox(height: 32),
 
             // Button to go back to home or another screen

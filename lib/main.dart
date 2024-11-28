@@ -1,3 +1,4 @@
+import 'package:facility_boking/auth_wrapper.dart';
 import 'package:facility_boking/models/booking_model.dart';
 import 'package:facility_boking/providers/auth_provider.dart';
 import 'package:facility_boking/providers/bookings_provider.dart';
@@ -58,10 +59,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Facility Booking',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginScreen(),
+      debugShowCheckedModeBanner: false,
+      home: const AuthWrapper(),
       routes: {
         '/login': (context) => LoginScreen(),
-        '/signup': (context) => SignupScreen(),
+        '/signup': (context) => const SignupScreen(),
         '/forgot-password': (context) => ForgotPasswordScreen(),
         '/home-screen': (context) => const HomeScreen(),
         '/calendar-screen': (context) => const CalendarScreen(),
@@ -86,7 +88,7 @@ class MyApp extends StatelessWidget {
         '/category-screen' : (context) => const CategoryScreen(),
         '/reports-screen' : (context) => const ReportsScreen(),
         '/bookings' : (context) => const BookingsScreen(),
-        '/manage-users' : (context) => ManageUsersScreen(),
+        '/manage-users' : (context) => const ManageUsersScreen(),
         '/edit-facility' : (context) => EditFacilityScreen(facility: ModalRoute.of(context)!.settings.arguments as FacilityModel),
       },
     );

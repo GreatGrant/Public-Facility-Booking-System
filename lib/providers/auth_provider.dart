@@ -38,7 +38,13 @@ class AuthProvider with ChangeNotifier {
   Stream<User?> authStateChanges() => _firebaseAuth.authStateChanges();
 
   // Authentication Actions
-  Future<void> signUp(String email, String password, String username, BuildContext context) async {
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String username,
+    required String phoneNumber,
+    required BuildContext context
+  }) async {
     _setLoading(true);
     try {
       _errorMessage = null;
@@ -49,7 +55,12 @@ class AuthProvider with ChangeNotifier {
           mobileNumber: password);
 
       if (_user != null) {
-        await _createUserDocument(email, username);
+        await _authService.signUpWithEmail(
+            name: username,
+            email: email,
+            password: password,
+            mobileNumber: phoneNumber
+        );
         _navigateToHome(context);
       } else {
         _errorMessage = 'Failed to sign up. Please try again.';
@@ -112,15 +123,6 @@ class AuthProvider with ChangeNotifier {
     } finally {
       _setLoading(false);
     }
-  }
-
-  // User Document Management
-  Future<void> _createUserDocument(String email, String username) async {
-    await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
-      'email': email,
-      'username': username,
-      'role': 'user', // Default role
-    });
   }
 
   Future<String> getUserRoleAndUsername() async {

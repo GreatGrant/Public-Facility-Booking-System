@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:facility_boking/global_variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -64,11 +65,11 @@ class FacilityCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Details',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
+                  style: TextStyle(color: GlobalVariables.primaryColor),
                 ),
               ),
             ],

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/facility_model.dart';
 import '../providers/facility_provider.dart';
+import '../widgets/loading_indicator.dart';
 
 class AddFacilityScreen extends StatefulWidget {
   const AddFacilityScreen({super.key});
@@ -339,6 +340,7 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
           rating: 4.5,
           isFeatured: false,
           price: double.tryParse(_priceController.text.trim()) ?? 100000,
+          isBooked: false,
         );
 
         // Add the facility
@@ -365,7 +367,7 @@ class _AddFacilityScreenState extends State<AddFacilityScreen> {
       barrierDismissible: false, // Prevent dismissing by tapping outside
       builder: (BuildContext context) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: LoadingIndicator(),
         );
       },
     );

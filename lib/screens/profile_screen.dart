@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
+import '../widgets/loading_indicator.dart';
 
 class ProfileScreen extends StatelessWidget {
   final Color primaryColor = const Color(0xFF0A72B1); // Deep blue
@@ -13,6 +14,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Consumer<UserProvider>(
       builder: (context, userProvider, child) {
         if (userProvider.userData == null) {
@@ -21,14 +24,13 @@ class ProfileScreen extends StatelessWidget {
             backgroundColor: accentColor,
             appBar: AppBar(
               backgroundColor: primaryColor,
-              elevation: 0,
-              title: const Text(
+              title:  Text(
                 'Profile',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium?.copyWith(color: accentColor),
               ),
               centerTitle: true,
             ),
-            body: const Center(child: CircularProgressIndicator()),
+            body: const Center(child: LoadingIndicator()),
           );
         }
 
@@ -40,10 +42,9 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: accentColor,
           appBar: AppBar(
             backgroundColor: primaryColor,
-            elevation: 0,
-            title: const Text(
+            title:  Text(
               'Profile',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium?.copyWith(color: accentColor),
             ),
             centerTitle: true,
           ),
@@ -135,9 +136,9 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   elevation: 5,
                   child: ListTile(
-                    leading: Icon(Icons.notifications, color: primaryColor),
-                    title: const Text('Notification Settings'),
-                    trailing: const Icon(Icons.arrow_forward_ios),
+                    leading: const Icon(Icons.notifications, color: Colors.grey),
+                    title: const Text('Notification Settings', style: TextStyle(color: Colors.grey),),
+                    trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey,),
                     onTap: () {
                       Navigator.pushNamed(context, '/notifications');
                     },
@@ -153,9 +154,9 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   elevation: 5,
                   child: ListTile(
-                    leading: Icon(Icons.settings, color: primaryColor),
-                    title: const Text('App Settings'),
-                    trailing: const Icon(Icons.arrow_forward_ios),
+                    leading: Icon(Icons.settings, color: Colors.grey),
+                    title: const Text('App Settings', style: TextStyle(color: Colors.grey)),
+                    trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                     onTap: () {
                       Navigator.pushNamed(context, '/app-settings');
                     },
@@ -167,8 +168,10 @@ class ProfileScreen extends StatelessWidget {
                 // Logout Button
                 OutlinedButton.icon(
                   onPressed: () async {
+
                     // Handle logout logic here
                     await FirebaseAuth.instance.signOut();
+                    if(!context.mounted) return;
                     Navigator.pushReplacementNamed(context, '/login');
                   },
                   icon: Icon(Icons.logout, color: primaryColor),

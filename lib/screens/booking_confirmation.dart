@@ -3,6 +3,7 @@ import 'package:intl/intl.dart'; // For date formatting
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/facility_model.dart';
+import '../widgets/loading_indicator.dart';
 
 class BookingConfirmationScreen extends StatefulWidget {
   final FacilityModel facilityModel; // Accept FacilityModel
@@ -45,10 +46,10 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
               width: double.infinity,
               fit: BoxFit.cover,
               placeholder: (context, url) => const Center(
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
               errorWidget: (context, url, error) =>
-              const Icon(Icons.error, size: 100, color: Colors.red),
+              const Icon(Icons.broken_image, size: 100, color: Colors.grey),
             ),
             const SizedBox(height: 16),
 

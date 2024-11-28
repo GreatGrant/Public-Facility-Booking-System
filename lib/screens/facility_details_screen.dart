@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../helpers/date_formatter.dart';
+import '../widgets/loading_indicator.dart';
 
 class FacilityDetailsScreen extends StatefulWidget {
   final FacilityModel facilityModel;
@@ -53,10 +54,10 @@ class _FacilityDetailsScreenState extends State<FacilityDetailsScreen> {
                 width: double.infinity,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingIndicator(),
                 ),
                 errorWidget: (context, url, error) =>
-                const Icon(Icons.broken_image, size: 100, color: Colors.red),
+                const Icon(Icons.broken_image, size: 100, color: Colors.grey),
               ),
               const SizedBox(height: 16),
 

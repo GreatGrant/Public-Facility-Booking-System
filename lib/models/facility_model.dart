@@ -9,6 +9,7 @@ class FacilityModel {
   final List<DateTime> availabilityDates; // Field for availability
   final String location; // Location as a string (address)
   final double price; // Added price field
+  final bool isBooked; // New field
 
   FacilityModel({
     required this.id,
@@ -21,6 +22,7 @@ class FacilityModel {
     required this.availabilityDates,
     required this.location, // String address for location
     required this.price, // Added price to the constructor
+    required this.isBooked, // New isBooked field
   });
 
   // CopyWith method to create a copy of the model with some updated fields
@@ -34,6 +36,7 @@ class FacilityModel {
     List<DateTime>? availabilityDates,
     String? location,
     double? price,
+    bool? isBooked, // Allow updating isBooked
   }) {
     return FacilityModel(
       id: this.id,
@@ -46,6 +49,7 @@ class FacilityModel {
       availabilityDates: availabilityDates ?? this.availabilityDates,
       location: location ?? this.location,
       price: price ?? this.price,
+      isBooked: isBooked ?? this.isBooked, // Handle isBooked
     );
   }
 
@@ -64,6 +68,7 @@ class FacilityModel {
           [],
       location: data['location'] ?? '', // Directly using location as a string
       price: (data['price'] ?? 0.0).toDouble(), // Parse price from Firestore
+      isBooked: data['isBooked'] ?? false, // Parse isBooked from Firestore
     );
   }
 
@@ -75,9 +80,11 @@ class FacilityModel {
       'description': description, // Add description to Firestore
       'rating': rating,
       'isFeatured': isFeatured,
-      'availabilityDates': availabilityDates.map((date) => date.toIso8601String()).toList(),
+      'availabilityDates':
+      availabilityDates.map((date) => date.toIso8601String()).toList(),
       'location': location, // Storing location directly as a string
       'price': price, // Store price in Firestore
+      'isBooked': isBooked, // Store isBooked in Firestore
     };
   }
 }

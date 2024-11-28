@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/facility_model.dart';
 import '../providers/facility_provider.dart';
+import '../widgets/loading_indicator.dart';
 
 class SearchFacilitiesScreen extends StatefulWidget {
   const SearchFacilitiesScreen({super.key});
@@ -72,7 +73,7 @@ class _SearchFacilitiesScreenState extends State<SearchFacilitiesScreen> {
                 stream: facilityProvider.searchFacilities(searchController.text),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: LoadingIndicator());
                   } else if (snapshot.hasError) {
                     return Center(
                       child: Text(

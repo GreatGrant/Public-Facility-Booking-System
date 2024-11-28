@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../models/facility_model.dart';
 import '../providers/facility_provider.dart';
+import '../widgets/loading_indicator.dart';
 
 class EditFacilityScreen extends StatefulWidget {
   final FacilityModel facility;
@@ -359,7 +360,7 @@ class _EditFacilityScreenState extends State<EditFacilityScreen> {
     showDialog(
       context: context,
       builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+        child: LoadingIndicator(),
       ),
     );
   }

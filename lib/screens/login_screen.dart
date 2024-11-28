@@ -146,7 +146,10 @@ class LoginScreen extends StatelessWidget {
 
                   // Show Lottie animation if loading
                   if (authProvider.isLoading)
-                    const LoadingIndicator(),
+              Container(
+              color: Colors.black.withOpacity(0.5),
+                    child:const LoadingIndicator(),
+              )
                 ],
               );
             },

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:facility_boking/models/booking_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/bookings_provider.dart';
+import '../widgets/loading_indicator.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -39,7 +41,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
         backgroundColor: const Color(0xFF0A72B1), // Deep blue color
       ),
       body: bookingsProvider.isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: LoadingIndicator())
           : bookingsProvider.error != null
           ? Center(child: Text(bookingsProvider.error!))
           : ListView.builder(
@@ -121,8 +123,8 @@ class BookingCard extends StatelessWidget {
     );
   }
 
-  void _updateStatus(BuildContext context, String newStatus) {
-    Provider.of<BookingsProvider>(context, listen: false)
+  Future<void> _updateStatus(BuildContext context, String newStatus) async {
+    await Provider.of<BookingsProvider>(context, listen: false)
         .updateBookingStatus(booking.id, newStatus);
   }
 
@@ -141,3 +143,4 @@ class BookingCard extends StatelessWidget {
     return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
   }
 }
+

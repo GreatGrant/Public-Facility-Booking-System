@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../models/booking_model.dart';
 import '../models/facility_model.dart';
 import '../providers/user_provider.dart';
+import '../widgets/loading_indicator.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -175,7 +176,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         showDialog(
                           context: context,
                           barrierDismissible: false,
-                          builder: (context) => const Center(child: CircularProgressIndicator()),
+                          builder: (context) => const Center(child: LoadingIndicator()),
                         );
 
                         try {
@@ -203,7 +204,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               facilityName: facilityModel.name,
                               status: 'Pending',
                               bookedAt: DateTime.now(),
+
                             );
+
 
                             await FirebaseFirestore.instance
                                 .collection('bookings')

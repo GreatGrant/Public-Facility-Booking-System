@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/revenue_formatter.dart';
 import '../providers/bookings_provider.dart';
 import '../providers/facility_provider.dart';
+import '../providers/user_provider.dart';
 
 class AdminDashboard extends StatefulWidget {
 
@@ -26,12 +28,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
   void initState() {
     super.initState();
     // Call fetchTotalFacilities when the screen is first loaded
-    final provider = Provider.of<FacilityProvider>(context, listen: false);
-    provider.fetchTotalFacilities();
+    final facilitiesProvider = Provider.of<FacilityProvider>(context, listen: false);
+    facilitiesProvider.fetchTotalFacilities();
+
 
     final bookingsProvider = Provider.of<BookingsProvider>(context, listen: false);
     bookingsProvider.fetchTodaysBookings();
 
+    final usersProvider = Provider.of<UserProvider>(context, listen: false);
+    usersProvider.getTotalUsers();
   }
 
   @override
@@ -50,6 +55,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             icon: Icon(Icons.logout, color: accentColor),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
+              if(!context.mounted) return;
               Navigator.pushReplacementNamed(context, '/login');
             },
           ),
@@ -94,7 +100,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           );
                         },
                       ),
-                      _buildStatCard('Active Users', '150', Icons.people),
+                      Consumer<UserProvider>(
+                        builder: (context, provider, child) {
+                          return _buildStatCard(
+                            'Active Users',
+                            provider.totalUsers.toString(),
+                            Icons.people,
+                          );
+                        },
+                      ),
                       Consumer<BookingsProvider>(
                         builder: (context, provider, child) {
                           return _buildStatCard(
@@ -108,7 +122,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         builder: (context, facilityProvider, child) {
                           return _buildStatCard(
                             'Total Revenue',
-                          '₦${facilityProvider.totalRevenue}',
+                            formatRevenue(facilityProvider.totalRevenue),
                             Icons.calendar_today,
                           );
                         },
@@ -241,7 +255,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 fontWeight: FontWeight.bold,
                 color: textColor,
               ),
-              softWrap: true,  // Allows wrapping of the value text if needed
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,// Allows wrapping of the value text if needed
             ),
           ],
         ),

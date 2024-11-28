@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/booking_model.dart';
 import '../providers/user_provider.dart';
+import '../widgets/loading_indicator.dart';
 
 class BookingHistoryScreen extends StatelessWidget {
   const BookingHistoryScreen({super.key});
@@ -29,7 +30,7 @@ class BookingHistoryScreen extends StatelessWidget {
         stream: userBookingsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingIndicator());
           }
 
           if (snapshot.hasError) {

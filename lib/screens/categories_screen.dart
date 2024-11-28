@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/facility_provider.dart';
 import '../widgets/facilities_card.dart';
+import '../widgets/loading_indicator.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -47,7 +48,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       ),
       body: category == null
           ? const Center(
-        child: CircularProgressIndicator(),
+        child: LoadingIndicator(),
       )
           : Padding(
         padding: const EdgeInsets.all(16.0),
@@ -55,7 +56,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           builder: (context, facilityProvider, child) {
             if (facilityProvider.isLoading) {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               );
             }
 

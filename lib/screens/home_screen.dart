@@ -10,6 +10,7 @@ import '../providers/facility_provider.dart';
 import '../providers/user_provider.dart';
 import '../reusable_widgets.dart';
 import '../widgets.dart';
+import '../widgets/loading_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -202,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 stream: userBookingsStream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: LoadingIndicator());
                   }
 
                   if (snapshot.hasError) {

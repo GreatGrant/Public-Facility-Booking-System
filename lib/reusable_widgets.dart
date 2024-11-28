@@ -273,7 +273,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             focusedBorder: InputBorder.none,
             enabledBorder: InputBorder.none,
           ),
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
           onTap: () {
             setState(() {
               _isFocused = true;

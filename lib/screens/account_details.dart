@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
+import '../widgets/loading_indicator.dart';
 
 class AccountDetailsScreen extends StatelessWidget {
+
+  const AccountDetailsScreen({super.key});
   final Color primaryColor = const Color(0xFF0A72B1); // Deep blue
   final Color accentColor = const Color(0xFFD9EEF3); // Light blue
   final Color textColor = Colors.black;
-
-  const AccountDetailsScreen({super.key});
+  final bool isEditable = false; // This flag controls whether the user can edit
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Consumer<UserProvider>(
       builder: (context, userProvider, child) {
         if (userProvider.userData == null) {
@@ -20,14 +24,13 @@ class AccountDetailsScreen extends StatelessWidget {
             backgroundColor: accentColor,
             appBar: AppBar(
               backgroundColor: primaryColor,
-              elevation: 0,
-              title: const Text(
+              title: Text(
                 'Account Details',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium?.copyWith(color: accentColor),
               ),
               centerTitle: true,
             ),
-            body: Center(child: CircularProgressIndicator()),
+            body: const Center(child: LoadingIndicator()),
           );
         }
 
@@ -36,10 +39,9 @@ class AccountDetailsScreen extends StatelessWidget {
           backgroundColor: accentColor,
           appBar: AppBar(
             backgroundColor: primaryColor,
-            elevation: 0,
-            title: const Text(
+            title:  Text(
               'Account Details',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium?.copyWith(color: accentColor),
             ),
             centerTitle: true,
           ),
@@ -87,12 +89,14 @@ class AccountDetailsScreen extends StatelessWidget {
                     ),
                     trailing: Icon(
                       Icons.edit,
-                      color: primaryColor,
+                      color: isEditable ? primaryColor : Colors.grey, // Disable edit icon
                     ),
-                    onTap: () {
+                    onTap: isEditable
+                        ? () {
                       // Handle phone number edit
                       Navigator.pushNamed(context, '/edit-phone');
-                    },
+                    }
+                        : null, // Disable tap when not editable
                   ),
                 ),
 
@@ -112,12 +116,14 @@ class AccountDetailsScreen extends StatelessWidget {
                     ),
                     trailing: Icon(
                       Icons.edit,
-                      color: primaryColor,
+                      color: isEditable ? primaryColor : Colors.grey, // Disable edit icon
                     ),
-                    onTap: () {
+                    onTap: isEditable
+                        ? () {
                       // Handle address edit
                       Navigator.pushNamed(context, '/edit-address');
-                    },
+                    }
+                        : null, // Disable tap when not editable
                   ),
                 ),
 
@@ -134,12 +140,14 @@ class AccountDetailsScreen extends StatelessWidget {
                     title: const Text('Change Password'),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: primaryColor,
+                      color: isEditable ? primaryColor : Colors.grey, // Disable icon
                     ),
-                    onTap: () {
+                    onTap: isEditable
+                        ? () {
                       // Navigate to Change Password screen
                       Navigator.pushNamed(context, '/change-password');
-                    },
+                    }
+                        : null, // Disable tap when not editable
                   ),
                 ),
 
@@ -156,12 +164,14 @@ class AccountDetailsScreen extends StatelessWidget {
                     title: const Text('Security Settings'),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: primaryColor,
+                      color: isEditable ? primaryColor : Colors.grey, // Disable icon
                     ),
-                    onTap: () {
+                    onTap: isEditable
+                        ? () {
                       // Navigate to Security Settings screen
                       Navigator.pushNamed(context, '/security-settings');
-                    },
+                    }
+                        : null, // Disable tap when not editable
                   ),
                 ),
 
@@ -169,17 +179,19 @@ class AccountDetailsScreen extends StatelessWidget {
 
                 // Delete Account Button
                 OutlinedButton.icon(
-                  onPressed: () {
+                  onPressed: isEditable
+                      ? () {
                     // Handle account deletion logic here
                     Navigator.pushReplacementNamed(context, '/delete-account');
-                  },
-                  icon: Icon(Icons.delete, color: primaryColor),
+                  }
+                      : null, // Disable button when not editable
+                  icon: const Icon(Icons.delete, color: Colors.grey),
                   label: const Text('Delete Account'),
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: primaryColor),
+                    foregroundColor: isEditable ? null : Colors.grey, side: const BorderSide(color: Colors.grey),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
-                    ),
+                    ), // Grey out the button
                   ),
                 ),
               ],
