@@ -14,13 +14,6 @@ A Flutter-based mobile application for managing public facility bookings. The ap
 - **Profile Management**: View and manage user profile and booking history
 
 ---
-
-# Admin Dashboard – Facility Management App
-
-A Flutter-based admin dashboard for managing facilities, bookings, users, and reports. This dashboard is built for use by administrators to monitor real-time data, manage app content, and interact with Firebase services such as Firestore and Authentication.
-
----
-
 ## 📱 Features
 
 - **Authentication**
